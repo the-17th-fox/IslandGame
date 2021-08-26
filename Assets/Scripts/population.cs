@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class Population : MonoBehaviour
 {
-    private uint _populationAmount=1000;
-    private double 
+    private uint Population; 
     // Start is called before the first frame update
     void Start()
     {
@@ -17,5 +16,4 @@ public class Population : MonoBehaviour
     {
         
     }
-    void  
 }
