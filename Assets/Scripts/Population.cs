@@ -4,22 +4,29 @@ using UnityEngine;
 
 public class Population : MonoBehaviour
 {
-    private uint _population=10000;
-    private double _IncreasePopulationModificator=0.0002;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    //public float _populationLevel;
+    //float _populationIncreaseModificator = 0.002f;
+    //byte _educationLevel = 50;
 
-    // Update is called once per frame
-    void Update()
-    {
-        _population+=
-        
-    }
-    int IncreasePopulation() 
-    {
-        return (int)(_IncreasePopulationModificator * _population);
-    }
+    //public Population(float Population)
+    //{
+    //    _populationLevel = Population;
+    //}
+    
+    //public void PopulationUpdate()
+    //{
+    //    _populationLevel += PopulationIncrease() * Time.deltaTime;
+    //    if (_populationLevel < 0) { _populationLevel = 0; }
+    //   // Debug.Log((int)_population);
+    //}
+
+    //float PopulationIncrease() 
+    //{
+    //    return _populationIncreaseModificator * _populationLevel;
+    //}
+    //public void SetEducation(int value) 
+    //{
+    //    _educationLevel =(byte)(_educationLevel + value);
+    //}
+
 }
