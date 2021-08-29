@@ -9,7 +9,10 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
-/[Aa]ssets/
+/[Aa]ssets/NatureManufacture Assets/
+/[Aa]ssets/Samples/
+/[Aa]ssets/Stylized Water For URP/
+/[Aa]ssets/TerrainTexturesPackFree/
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
