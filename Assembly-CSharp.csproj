@@ -59,6 +59,7 @@
     <Compile Include="Assets\Scripts\Factories.cs" />
     <Compile Include="Assets\Scripts\InsustrialSector.cs" />
     <Compile Include="Assets\Scripts\Island.cs" />
+    <Compile Include="Assets\Scripts\Population.cs" />
     <Compile Include="Assets\Scripts\Resource.cs" />
     <Compile Include="Assets\Scripts\Resource20.cs" />
     <Compile Include="Assets\Scripts\SimpleCameraController.cs" />
