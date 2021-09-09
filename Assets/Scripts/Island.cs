@@ -70,7 +70,7 @@ public class Island : MonoBehaviour
         //}
 
         //woodFactory.Production(ref Wood, ref Money);
-        Money.IndusrialResourceGeneration(TimberIndustry,resources);
+        Money.IndusrialResourceGeneration(TimberIndustry,resources,0.5f);
         
         Resource.UpdateStatistics(statistics, resources);
 

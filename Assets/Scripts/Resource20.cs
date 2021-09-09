@@ -24,17 +24,17 @@ public class Resource : MonoBehaviour
             statistics[i].text = $"{resources[i]._name}: {resources[i]._amount}";
         }
     }
-    public void ResourceGeneration(uint Employees)
+    public void ResourceGeneration(Population VillagePopulation)
     {
-        _amount += (_basicGenerationSpeed * Employees / 1000) * Time.deltaTime;
+        _amount += (VillagePopulation._Education * _basicGenerationSpeed * VillagePopulation._Amount / 1000) * Time.deltaTime;
     }
-    public void IndusrialResourceGeneration(BasicIndustrySector industrySector, Resource[] warehouse)
+    public void IndusrialResourceGeneration(BasicIndustrySector industrySector, Resource[] warehouse,float EducationCityPopulation)
     {
         if (Timer.SecondGone())
         {
             for (int i = 0; i < industrySector._neededResourceID.Count; i++)
             {
-                if (warehouse[industrySector._neededResourceID[i]]._amount < industrySector.ProductionCost())
+                if (warehouse[industrySector._neededResourceID[i]]._amount < EducationCityPopulation*industrySector.ProductionCost())
                 {
                     Debug.Log($"There isn't enought resource {warehouse[i]._name}");
                     return;
@@ -43,10 +43,10 @@ public class Resource : MonoBehaviour
             }
             for (int i = 0; i < industrySector._neededResourceID.Count; i++)
             {
-                warehouse[industrySector._neededResourceID[i]]._amount -= industrySector.ProductionCost();
+                warehouse[industrySector._neededResourceID[i]]._amount -= EducationCityPopulation* industrySector.ProductionCost();
             }
 
-            _amount += industrySector.ProductionAmount();
+            _amount +=EducationCityPopulation*industrySector.ProductionAmount();
             Debug.Log("_increase amount" + industrySector.ProductionAmount());
         }
     }

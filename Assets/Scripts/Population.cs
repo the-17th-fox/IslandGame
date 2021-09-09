@@ -1,42 +1,63 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+public struct NeedsPerHuman 
+{
+    int _IDResource;
+    float _Amount;
+    float _SatisfiedNeed;
+}
 public class Population : MonoBehaviour
 {
 
     CityPopulation cityPopulation;
     VillagesPopulation villagesPopulation;
+    NeedsPerHuman FoodNeed, WoodNeed;
 
     private void Start() 
     {
         cityPopulation = gameObject.AddComponent<CityPopulation>();
         villagesPopulation = gameObject.AddComponent<VillagesPopulation>();
+            cityPopulation.CreateCityPopulation(10000, 0.5f);
+            villagesPopulation.CreateVilPopulation(10000, 0.3f);
+        
     }
 
     private void Update()
     {
-        cityPopulation.CreateCityPopulation();
-        villagesPopulation.CreateVilPopulation();
+        cityPopulation.PopulationGeneration();
+        villagesPopulation.PopulationGeneration();
     }
 
     public uint _Amount;
+    public float _Education;
+    public float _GenerationSpeed;
+    public List<NeedsPerHuman> PopulationNeeds;
+    public void PopulationGeneration() 
+    {
+        _Amount +=(uint)( _Amount * _GenerationSpeed * Time.deltaTime);
+    }
 }
 public class CityPopulation : Population 
 {
     new public uint _Amount;
+    new public float _Education;
+    
 
-    public void CreateCityPopulation() 
+    public void CreateCityPopulation(uint Amount,float Education) 
     {
-        _Amount = 10;
+        _Amount = Amount;
+        _Education = Education;
     } 
 }
 public class VillagesPopulation : Population 
 {
     new public uint _Amount;
+    new public float _Education;
 
-    public void CreateVilPopulation() 
+    public void CreateVilPopulation(uint Amount, float Education) 
     {
-        _Amount = 5;
+        _Amount = Amount;
+        _Education = Education;
     }  
 }

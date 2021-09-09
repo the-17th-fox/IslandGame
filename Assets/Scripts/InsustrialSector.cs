@@ -18,7 +18,7 @@ public class BasicIndustrySector : MonoBehaviour
     public List <byte> _neededResourceID { set; get; } // необходимые ресурсы для производства
     private const uint _workplacePerLVL= 1000; // кол-во рабочих мест на каждый уровень
 
-    public void CreateNewSector(string Name, byte Level, float Effectivenes, float ProductionCoefficient, uint Employees, params byte[] IDs )
+    public void CreateNewSector(string Name, byte Level, float Effectivenes, float ProductionCoefficient, uint Employees, params byte[] IDsResource )
     {
         _name = Name;
         _level = Level;
@@ -28,7 +28,7 @@ public class BasicIndustrySector : MonoBehaviour
         _staffing = _employees / (_workplacePerLVL * _level);
         _neededResourceID = new List<byte>();
 
-        foreach (byte ID in IDs)
+        foreach (byte ID in IDsResource)
         {
             _neededResourceID.Add(ID);
         }
