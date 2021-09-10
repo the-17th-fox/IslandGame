@@ -28,26 +28,5 @@ public class Resource : MonoBehaviour
     {
         _amount += (_basicGenerationSpeed * Employees / 1000) * Time.deltaTime;
     }
-    public void IndusrialResourceGeneration(BasicIndustrySector industrySector, Resource[] warehouse)
-    {
-        if (Timer.SecondGone())
-        {
-            for (int i = 0; i < industrySector._neededResourceID.Count; i++)
-            {
-                if (warehouse[industrySector._neededResourceID[i]]._amount < industrySector.ProductionCost())
-                {
-                    Debug.Log($"There isn't enought resource {warehouse[i]._name}");
-                    return;
-                }
-
-            }
-            for (int i = 0; i < industrySector._neededResourceID.Count; i++)
-            {
-                warehouse[industrySector._neededResourceID[i]]._amount -= industrySector.ProductionCost();
-            }
-
-            _amount += industrySector.ProductionAmount();
-            Debug.Log("_increase amount" + industrySector.ProductionAmount());
-        }
-    }
+    
 }

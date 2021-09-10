@@ -23,17 +23,10 @@ public class Island : MonoBehaviour
     [SerializeField]
     private float _originalPopulationAmount = 10000;
 
-    Resource Wood;
-    Resource Food;
-    Resource Money;
-    Resource Population;
-
-    //WoodFactory woodFactory;
-    // 
-    BasicIndustrySector TimberIndustry;
-    /// 
-
-
+    public Resource Wood;
+    public Resource Food;
+    public Resource Money;
+    public Resource Population;
 
     Resource[] resources;
     Text[] statistics;
@@ -52,11 +45,11 @@ public class Island : MonoBehaviour
         Population = gameObject.AddComponent<Resource>();
             Population.CreateNewResource("Population", _originalPopulationAmount, BasicGenerationSpeed: 0.03f, isMarketable:false);
 
-        //woodFactory = gameObject.AddComponent<WoodFactory>();
-        //
-        TimberIndustry = gameObject.AddComponent<BasicIndustrySector>();
-            TimberIndustry.CreateNewSector("Timer", Level: 1, Effectivenes: 1, ProductionCoefficient: 0.7f, Employees: 1000, 0, 1);
-        ///
+        ////woodFactory = gameObject.AddComponent<WoodFactory>();
+        ////
+        //TimberIndustry = gameObject.AddComponent<BasicIndustrialSector>();
+        //    TimberIndustry.CreateNewSector("Timer", Level: 1, Effectivenes: 1, ProductionCoefficient: 0.7f, Employees: 1000, 0, 1);
+        /////
 
         resources = new[] { Wood, Food, Money, Population };
         statistics = new[] { WoodAmountText, FoodAmountText, MoneyAmountText, PopulationAmountText };
@@ -70,7 +63,7 @@ public class Island : MonoBehaviour
         //}
 
         //woodFactory.Production(ref Wood, ref Money);
-        Money.IndusrialResourceGeneration(TimberIndustry,resources);
+        //Money.IndusrialResourceGeneration(TimberIndustry,resources);
         
         Resource.UpdateStatistics(statistics, resources);
 
