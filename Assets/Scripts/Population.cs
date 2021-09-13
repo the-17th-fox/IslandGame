@@ -1,18 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public struct NeedsPerHuman 
-{
-    int _IDResource;
-    float _Amount;
-    float _SatisfiedNeed;
-}
 public class Population : MonoBehaviour
 {
 
     CityPopulation cityPopulation;
     VillagesPopulation villagesPopulation;
-    NeedsPerHuman FoodNeed, WoodNeed;
 
     private void Start() 
     {
@@ -32,7 +25,6 @@ public class Population : MonoBehaviour
     public uint _Amount;
     public float _Education;
     public float _GenerationSpeed;
-    public List<NeedsPerHuman> PopulationNeeds;
     public void PopulationGeneration() 
     {
         _Amount +=(uint)( _Amount * _GenerationSpeed * Time.deltaTime);
