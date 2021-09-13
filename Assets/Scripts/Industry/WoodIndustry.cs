@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WoodIndustry : MonoBehaviour
+public class WoodIndustry : BasicIndustrialSector
 {
     [SerializeField]
     private GameObject _firstLVL_prefab;
@@ -13,43 +13,32 @@ public class WoodIndustry : MonoBehaviour
     [SerializeField]
     private GameObject _fourthLVL_prefab;
 
-    [SerializeField]
-    private byte SLevel = 1; // уровень отрасли
-    [SerializeField]
-    private float SEffectiveness; // коэффициент эффективности производства
-    [SerializeField]
-    private float SProductionProportion; // пропорция вход-выход
-    [SerializeField]
-    private uint SEmployeesAmount; // кол-во работников
-    [SerializeField]
-    private uint SWorkplacesPerLVL; // кол-во рабочих мест на каждый уровень
-    [SerializeField]
-    private bool isEnabledByStart; // включена ли пром-ность
-
     private Resource[] ConsumableResources; // необходимые ресурсы для производства
     private Resource[] ProducedResources; // выходные ресурсы
 
     [SerializeField]
-    protected Island _island;
+    private Island island;
 
-    BasicIndustrialSector woodIndustry;
+    private BasicIndustrialSector woodIndustry;
 
     private void Start()
     {
         woodIndustry = gameObject.AddComponent<BasicIndustrialSector>();
-            woodIndustry.CreateNewIndustry(SLevel, SEffectiveness, SProductionProportion, SEmployeesAmount, SWorkplacesPerLVL,  isEnabledByStart);
+        woodIndustry.CreateNewIndustry("Wood Industry", ProductionProportion: 5, WorkplacesPerLVL: 5, isEnabled: true);
 
-        ConsumableResources = new[] { _island.Money };
-        ProducedResources = new[] { _island.Wood };
+        woodIndustry.SetNewEmployeesAmount(5);
+
+        ConsumableResources = new[] { island.Money, island.Food };
+        ProducedResources = new[] { island.Timber };
     }
 
     private void Update()
     {
-        if (woodIndustry._isEnabled)
+        if (woodIndustry.IsEnabled())
         {
-            woodIndustry.StaffingUpdate();
-            woodIndustry.IndustryResourceProduction(ConsumableResources, ProducedResources);
+            woodIndustry.IndustryResourceProduction(ConsumableResources, ProducedResources, woodIndustry);
         }
+        
     }
 }
     

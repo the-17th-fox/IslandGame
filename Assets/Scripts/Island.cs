@@ -14,57 +14,38 @@ public class Island : MonoBehaviour
     [SerializeField]
     private Text PopulationAmountText;
 
-    [SerializeField]
-    private float _originalWoodAmount = 0;
-    [SerializeField]
-    private float _originalFoodAmount = 0;
-    [SerializeField]
-    private float _originalMoneyAmount = 0;
-    [SerializeField]
-    private float _originalPopulationAmount = 10000;
-
-    public Resource Wood;
+    public Resource Timber;
     public Resource Food;
     public Resource Money;
+    public Resource Trees;
     public Resource Population;
 
-    Resource[] resources;
-    Text[] statistics;
+    private Resource[] resources;
+    private Text[] statistics;
 
     private void Start()
     { 
-        Wood = gameObject.AddComponent<Resource>();
-            Wood.CreateNewResource("Wood", _originalWoodAmount, BasicGenerationSpeed: 0.7f);
+        Timber = gameObject.AddComponent<Resource>();
+            Timber.CreateNewResource("Древесина", 20);
 
         Food = gameObject.AddComponent<Resource>();
-            Food.CreateNewResource("Food", _originalFoodAmount);
+            Food.CreateNewResource("Еда", 35);
 
         Money = gameObject.AddComponent<Resource>();
-            Money.CreateNewResource("Money", _originalMoneyAmount, BasicGenerationSpeed: 0.2f, isMarketable:false);
+            Money.CreateNewResource("Деньги", 100, BasicGenerationSpeed: 0.05f, isMarketable:false);
 
         Population = gameObject.AddComponent<Resource>();
-            Population.CreateNewResource("Population", _originalPopulationAmount, BasicGenerationSpeed: 0.03f, isMarketable:false);
+            Population.CreateNewResource("Население", 500, BasicGenerationSpeed: 0.03f, isMarketable:false);
 
-        ////woodFactory = gameObject.AddComponent<WoodFactory>();
-        ////
-        //TimberIndustry = gameObject.AddComponent<BasicIndustrialSector>();
-        //    TimberIndustry.CreateNewSector("Timer", Level: 1, Effectivenes: 1, ProductionCoefficient: 0.7f, Employees: 1000, 0, 1);
-        /////
+        Trees = gameObject.AddComponent<Resource>();
+        Trees.CreateNewResource("Деревья", 400, BasicGenerationSpeed: 0.001f);
 
-        resources = new[] { Wood, Food, Money, Population };
+        resources = new[] { Timber, Food, Money, Population };
         statistics = new[] { WoodAmountText, FoodAmountText, MoneyAmountText, PopulationAmountText };
     }
 
     private void Update()
     {
-        //foreach (var resource in resources)
-        //{
-        //    resource.ResourceGeneration((uint)(Population._amount / 100 * 50));
-        //}
-
-        //woodFactory.Production(ref Wood, ref Money);
-        //Money.IndusrialResourceGeneration(TimberIndustry,resources);
-        
         Resource.UpdateStatistics(statistics, resources);
 
     }
