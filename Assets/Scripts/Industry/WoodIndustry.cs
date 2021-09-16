@@ -24,11 +24,11 @@ public class WoodIndustry : BasicIndustrialSector
     private void Start()
     {
         woodIndustry = gameObject.AddComponent<BasicIndustrialSector>();
-        woodIndustry.CreateNewIndustry("Wood Industry", ProductionProportion: 5, WorkplacesPerLVL: 5, isEnabled: true);
+            woodIndustry.CreateNewIndustry(MaxLevelConst: 2, ProductionProportion: 5,  WorkplacesPerLVL: 10, isEnabled: true, Level: 2); // stuffing 0.5
+            woodIndustry.CreateArrayOfNamesByLVL("Forest Hut", "Sawmill");
+            woodIndustry.SetNewEmployeesAmount(10);
 
-        woodIndustry.SetNewEmployeesAmount(5);
-
-        ConsumableResources = new[] { island.Money, island.Food };
+        ConsumableResources = new[] { island.Trees, island.Money };
         ProducedResources = new[] { island.Timber };
     }
 
@@ -36,9 +36,8 @@ public class WoodIndustry : BasicIndustrialSector
     {
         if (woodIndustry.IsEnabled())
         {
-            woodIndustry.IndustryResourceProduction(ConsumableResources, ProducedResources, woodIndustry);
+            woodIndustry.IndustryResourceProduction(ConsumableResources, ProducedResources);
         }
-        
     }
 }
     
