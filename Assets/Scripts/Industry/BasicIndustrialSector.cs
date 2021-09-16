@@ -14,8 +14,10 @@ public class BasicIndustrialSector : MonoBehaviour
     private uint _totalWorkplacesAmount; // кол-во рабочих мест в в сумме
     private bool _isEnabled; // включена ли пром-ность
 
+    private string[] IndustryLVLNames; // имя сферы с каждым уровнем
+
     private const byte MIN_LVL = 1;
-    private const byte MAX_LVL = 4;
+    private byte MAX_LVL;
     
     private const float MIN_STAFFING = 0.0f;
     private const float MAX_STAFFING = 1.0f;
@@ -27,14 +29,31 @@ public class BasicIndustrialSector : MonoBehaviour
     private const uint MIN_WORKPLACES_PER_LVL = 0;
     private const uint MIN_WORKPLACES = 0;
 
-    public void CreateNewIndustry(string Name, uint WorkplacesPerLVL, float ProductionProportion, float Effectiveness = 1, byte Level = 1, uint EmployeesAmount = 0,  bool isEnabled = true)
+    /// <summary>
+    /// Метод для создания сферы и установки значений для полей.
+    /// </summary>
+    /// <param name="WorkplacesPerLVL"></param>
+    /// <param name="ProductionProportion"></param>
+    /// <param name="MaxLevelConst"></param>
+    /// <param name="Effectiveness"></param>
+    /// <param name="Level"></param>
+    /// <param name="EmployeesAmount"></param>
+    /// <param name="isEnabled"></param>
+    public void CreateNewIndustry(uint WorkplacesPerLVL, float ProductionProportion, byte MaxLevelConst, float Effectiveness = 1, byte Level = 1, uint EmployeesAmount = 0,  bool isEnabled = true)
     {
         _isEnabled = isEnabled;
-        _name = Name;   
+
+        if (MaxLevelConst < MIN_LVL || MaxLevelConst > byte.MaxValue)
+        {
+            Debug.LogError($"CreateNewIndustry : MaxLevelConst({MaxLevelConst}) < MIN_LVL({MIN_LVL}) or > byteMaxValue");
+            SetIndustryDisabled();
+        }
+        MAX_LVL = MaxLevelConst;
+        IndustryLVLNames = new string[MAX_LVL];
 
         if (Level < MIN_LVL || Level > MAX_LVL)
         {
-            Debug.LogError($"CreateNewIndustry : Level({Level}) < MinLVL{MIN_LVL} or > MaxLVL{MAX_LVL}");
+            Debug.LogError($"CreateNewIndustry : Level({Level}) | MinLVL({MIN_LVL}) | MaxLVL({MAX_LVL})");
             SetIndustryDisabled();
         }
         _lvl = Level;
@@ -70,13 +89,35 @@ public class BasicIndustrialSector : MonoBehaviour
         EmployeesRecalculation();
     }
 
+////////////////////////////////////////////////////// АКТИВНОСТЬ СФЕРЫ
+
+    /// <summary>
+    /// Активировать сферу
+    /// </summary>
     public void SetIndustryEnabled() => _isEnabled = true;
 
+    /// <summary>
+    /// Деактивировать сферы
+    /// </summary>
     public void SetIndustryDisabled() => _isEnabled = false;
 
-    public bool IsEnabled() => _isEnabled ? true : false;
+    /// <summary>
+    /// Проверка на активность сферы
+    /// </summary>
+    /// <returns></returns>
+    public bool IsEnabled()
+    {
+        if (IndustryLVLNames == null)
+        {
+            Debug.LogError($"IsEnabled : IndustryLVLNamesArray = null.");
+            SetIndustryDisabled();
+        }
 
-/////////////////////////// РАБОТНИКИ
+        if (_isEnabled) return true;
+        else return false;
+    }
+
+////////////////////////////////////////////////////// МЕТОДЫ, КАСАЮЩИЕСЯ РАБОТНИКОВ
 
     /// <summary>
     /// Пересчитывает кол-во работников, делает проверку на корректность данных
@@ -123,7 +164,7 @@ public class BasicIndustrialSector : MonoBehaviour
         EmployeesRecalculation();
     }
 
-    /////////////////////////// УРОВЕНЬ ПРОИЗВОДСТВА
+////////////////////////////////////////////////////// УРОВЕНЬ ПРОИЗВОДСТВА И НАЗВАНИЕ СФЕРЫ
 
     /// <summary>
     /// Повышает уровень отрасли
@@ -137,6 +178,7 @@ public class BasicIndustrialSector : MonoBehaviour
             return;
         }
         _lvl += 1;
+        UpdateNameByLVL(IndustryLVLNames);
     }
 
     /// <summary>
@@ -151,9 +193,41 @@ public class BasicIndustrialSector : MonoBehaviour
             return;
         }
         _lvl -= 1;
+        UpdateNameByLVL(IndustryLVLNames);
     }
 
-    /////////////////////////// ПРОИЗВОДСТВО
+    /// <summary>
+    /// Создает массив имён сферы производства для каждого уровня
+    /// </summary>
+    /// <param name="levelNames"></param>
+    public void CreateArrayOfNamesByLVL(params string[] levelNames)
+    {
+        if (levelNames.Length != MAX_LVL)
+        {
+            Debug.LogError($"CreateIndustryNameByLVL : Not all levels got their names. NamesAmount: {levelNames.Length} | Levels: {MAX_LVL}");
+            return;
+        }
+
+        for (int i = 0; i < levelNames.Length; i++)
+        {
+            IndustryLVLNames[i] = levelNames[i];
+        }
+
+        UpdateNameByLVL(IndustryLVLNames);
+    }
+
+    /// <summary>
+    /// Обновляет имя сферы в зависимости от уровня
+    /// </summary>
+    /// <param name="industryLVLNames"></param>
+    /// <param name="isLoggingEnabled"></param>
+    private void UpdateNameByLVL(string[] industryLVLNames, bool isLoggingEnabled = false)
+    {
+        _name = industryLVLNames[_lvl - 1];
+        if (isLoggingEnabled) Debug.Log($"UpdateNameByLVL : Name: '{_name}' | Level: '{_lvl}'");
+    }
+
+////////////////////////////////////////////////////// ПРОИЗВОДСТВО
 
     /// <summary>
     /// Кол-во произведенных ресурсов
@@ -170,19 +244,21 @@ public class BasicIndustrialSector : MonoBehaviour
     /// <summary>
     /// Производит ресурс(ы) _producedResources[] за счёт ресурс(ов) _consumableResources[]
     /// </summary>
-    public void IndustryResourceProduction(Resource[] ConsumableResources, Resource[] ProducedResources, BasicIndustrialSector industry)
+    public void IndustryResourceProduction(Resource[] ConsumableResources, Resource[] ProducedResources, bool isLoggingEnabled = false)
     {
         if (Timer.SecondGone())
         {
             bool isResourcesEnough = true;
-            foreach (Resource neededResource in ConsumableResources)
+            foreach (Resource consumableResource in ConsumableResources)
             {
-                if (neededResource._amount < ConsumableResourcesAmount())
+                if (consumableResource._amount < ConsumableResourcesAmount())
                 {
-                    Debug.Log($"{industry._name}: not enough {neededResource._name} [{neededResource._amount}/{ConsumableResourcesAmount()}] to get produced resource(s).");
+                    if(isLoggingEnabled)
+                        Debug.Log($"IndustryResourceProduction : not enough {consumableResource._name} [{consumableResource._amount}/{ConsumableResourcesAmount()}] to get produced resource(s).");
                     isResourcesEnough = false;
                 }
             }
+
             if (!isResourcesEnough) return;
 
             foreach (Resource consumableResource in ConsumableResources)
