@@ -1,32 +1,49 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
+
 public class Resource : MonoBehaviour
 {
     public string _name { set; get; } // название
     public float _amount { set; get; } // кол-во
     public bool _isMarketable { set; get; } // продаваемое/покупаемо ли?
+    public float _maxAmount { set; get; } // максимальное количество
     public float _basicGenerationSpeed { set; get; } // эффективность генерации первичных ресурсов
 
-    public void CreateNewResource(string Name, float Amount, float BasicGenerationSpeed = 0, bool isMarketable = true)
+    public void CreateNewResource(string Name, float MaxAmount = float.MaxValue, float InitAmount = 0, float BasicGenerationSpeed = 0, bool isMarketable = true)
     {
         _name = Name;
-        _amount = Amount;
+        _maxAmount = MaxAmount;
+        _amount = InitAmount;
         _basicGenerationSpeed = BasicGenerationSpeed;
         _isMarketable = isMarketable;
     }
 
     static public void UpdateStatistics(Text[] statistics, Resource[] resources)
     {
+        if (statistics.Length != resources.Length)
+        {
+            Debug.LogError("UpdateStatistics : Text[] statistics and Resource[] resources don't match in the number of elements.");
+            return;
+        }
+
         for (int i = 0; i < statistics.Length; i++)
         {
-            statistics[i].text = $"{resources[i]._name}: {resources[i]._amount}";
+            statistics[i].text = $"{resources[i]._name}: {Math.Round(resources[i]._amount, 1)}";
         }
     }
-    public void ResourceGeneration(uint Employees)
+    public static void BasicResourcesGeneration(Resource[] resources)
     {
-        _amount += (_basicGenerationSpeed * Employees / 1000) * Time.deltaTime;
+        foreach (Resource resource in resources)
+        {
+            if (resource._basicGenerationSpeed != 0 && resource._amount < resource._maxAmount)
+            {
+                resource._amount += resource._basicGenerationSpeed * Time.deltaTime;
+            }
+        }
+        
     }
     
 }
