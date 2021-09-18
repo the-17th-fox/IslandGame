@@ -16,23 +16,22 @@ public class Population : MonoBehaviour
     [SerializeField]
     private Island island;
     private Resource[] NessosaryResources;
-    private Population population;
+    //private Population population;
 
     private void Start()
     {
         island = gameObject.AddComponent<Island>();
-        population = gameObject.AddComponent<Population>();
-        population.CreatePopulation(Amount: 1000, Education: 1);
+        //population = gameObject.AddComponent<Population>();
+        CreatePopulation(Amount: 1000, Education: 1);
         NessosaryResources = new[] { island.Food };
     }
     private void Update()
     {
         if (Timer.SecondGone())
         {
-            Debug.Log("Second gone");
-            population.PopulationNeedUpdate(NessosaryResources);
-            population.PopulationIncrease();
-            Debug.Log("population=" + population._Amount + " Food=" + island.Food._amount);
+            Debug.Log($"P{_Amount} F: {island.Food._amount} Satisf: {_NecessarySatisfactedNeeds}");
+            PopulationNeedUpdate(NessosaryResources);
+            PopulationIncrease();
         }
         
     }
@@ -42,7 +41,7 @@ public class Population : MonoBehaviour
         _Amount = Amount;
         _Education = Education;
         //_Medcine = Medcine;
-        _NecessarySatisfactedNeeds = 1;  //со старта нужд нет
+        _NecessarySatisfactedNeeds = 1f;  //со старта нужд нет
         //_LuxurySatisfactedNeeds = 1;
         _PopulationIncrease = 0.01f;
     }
@@ -53,24 +52,24 @@ public class Population : MonoBehaviour
     }
     public void PopulationIncrease() 
     {
-     _Amount += (_PopulationIncrease */*_Medcine* */ _Amount * _NecessarySatisfactedNeeds);   
+        _Amount += (_PopulationIncrease */*_Medcine* */ _Amount * _NecessarySatisfactedNeeds) * Time.deltaTime;   
     }
     
     public float PopulationNeed(Resource[] ConsumableResources) 
     {
-        float NeedValue = _NecessaryNeeds * _Amount;
-        float TotalNeedSatisfation = 0;
+        float NeedValue = _NecessaryNeeds * _Amount; // 1
+        float TotalNeedSatisfation = 0; 
         for(int i=0; i < ConsumableResources.Length; i++)
         {
             if (ConsumableResources[i]._amount >= NeedValue)
             {
                 TotalNeedSatisfation++;
-                ConsumableResources[i]._amount -= NeedValue;
+                ConsumableResources[i]._amount -= NeedValue * Time.deltaTime;
             }
             else 
             {
                 TotalNeedSatisfation += ConsumableResources[i]._amount / NeedValue;
-                ConsumableResources[i]._amount -= ConsumableResources[i]._amount;
+                ConsumableResources[i]._amount -= ConsumableResources[i]._amount * Time.deltaTime;
             }
         }
         return (TotalNeedSatisfation / ConsumableResources.Length);
