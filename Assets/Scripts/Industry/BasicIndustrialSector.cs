@@ -39,7 +39,8 @@ public class BasicIndustrialSector : MonoBehaviour
     /// <param name="Level"></param>
     /// <param name="EmployeesAmount"></param>
     /// <param name="isEnabled"></param>
-    public void CreateNewIndustry(uint WorkplacesPerLVL, float ProductionProportion, byte MaxLevelConst, float Effectiveness = 1, byte Level = 1, uint EmployeesAmount = 0,  bool isEnabled = true)
+    public void CreateNewIndustry(uint WorkplacesPerLVL, float ProductionProportion, byte MaxLevelConst,
+                                    float Effectiveness = 1, byte Level = 1, uint EmployeesAmount = 0,  bool isEnabled = true)
     {
         _isEnabled = isEnabled;
 
