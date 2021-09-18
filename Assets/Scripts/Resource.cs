@@ -6,11 +6,11 @@ using UnityEngine.UI;
 
 public class Resource : MonoBehaviour
 {
-    public string _name { set; get; } // название
+    public string _name { private set; get; } // название
     public float _amount { set; get; } // кол-во
-    public bool _isMarketable { set; get; } // продаваемое/покупаемо ли?
-    public float _maxAmount { set; get; } // максимальное количество
-    public float _basicGenerationSpeed { set; get; } // эффективность генерации первичных ресурсов
+    public bool _isMarketable { private set; get; } // продаваемое/покупаемо ли?
+    public float _maxAmount { private set; get; } // максимальное количество
+    public float _basicGenerationSpeed { private set; get; }// эффективность генерации первичных ресурсов
 
     public void CreateNewResource(string Name, float MaxAmount = float.MaxValue, float InitAmount = 0, float BasicGenerationSpeed = 0, bool isMarketable = true)
     {
