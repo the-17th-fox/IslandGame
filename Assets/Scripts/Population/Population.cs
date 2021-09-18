@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 public class Population : MonoBehaviour
 {
-    public uint _Amount;
+    public float _Amount;
     public float _Education;
     public float _GenerationSpeed;
-    public float _Medcine;
+    //public float _Medcine;
     public float _NecessarySatisfactedNeeds;
     //public float _LuxurySatisfactedNeeds;
     public float _PopulationIncrease;
@@ -15,21 +15,36 @@ public class Population : MonoBehaviour
     
     [SerializeField]
     private Island island;
+    private Resource[] NessosaryResources;
+    private Population population;
 
     private void Start()
     {
-
+        island = gameObject.AddComponent<Island>();
+        population = gameObject.AddComponent<Population>();
+        population.CreatePopulation(Amount: 1000, Education: 1);
+        NessosaryResources = new[] { island.Food };
+    }
+    private void Update()
+    {
+        if (Timer.SecondGone())
+        {
+            Debug.Log("Second gone");
+            population.PopulationNeedUpdate(NessosaryResources);
+            population.PopulationIncrease();
+            Debug.Log("population=" + population._Amount + " Food=" + island.Food._amount);
+        }
+        
     }
 
-    public void CreatePopulation(uint Amount,float Education,float GenerationSpeed,float Medcine) 
+    public void CreatePopulation(uint Amount,float Education/*,float Medcine*/) 
     {
         _Amount = Amount;
         _Education = Education;
-        _GenerationSpeed = GenerationSpeed;
-        _Medcine = Medcine;
+        //_Medcine = Medcine;
         _NecessarySatisfactedNeeds = 1;  //со старта нужд нет
         //_LuxurySatisfactedNeeds = 1;
-        _PopulationIncrease = 0.0002f;
+        _PopulationIncrease = 0.01f;
     }
     public void PopulationNeedUpdate(Resource[] NessaryResources/*, Resource[] LuxuryResourse*/) 
     {
@@ -38,44 +53,26 @@ public class Population : MonoBehaviour
     }
     public void PopulationIncrease() 
     {
-        if (_PopulationIncrease * _Medcine * _Amount * _NecessarySatisfactedNeeds >= 0)
-        {
-            _Amount += (uint)(_PopulationIncrease * _Medcine * _Amount * _NecessarySatisfactedNeeds);
-        }
-        else 
-        {
-            if (_Amount < (uint)(_PopulationIncrease * _Medcine * _Amount * _NecessarySatisfactedNeeds))
-            {
-                _Amount = 0;
-            }
-            else
-            {
-                _Amount -= (uint)(_PopulationIncrease * _Medcine * _Amount * _NecessarySatisfactedNeeds);
-            }
-        }
+     _Amount += (_PopulationIncrease */*_Medcine* */ _Amount * _NecessarySatisfactedNeeds);   
     }
     
     public float PopulationNeed(Resource[] ConsumableResources) 
     {
-        float Need = 0.001f;
+        float NeedValue = _NecessaryNeeds * _Amount;
         float TotalNeedSatisfation = 0;
-        for(int i=0;i<ConsumableResources.Length;i++)
+        for(int i=0; i < ConsumableResources.Length; i++)
         {
-            if (ConsumableResources[i]._amount >= Need)
+            if (ConsumableResources[i]._amount >= NeedValue)
             {
                 TotalNeedSatisfation++;
-                ConsumableResources[i]._amount -= Need;
+                ConsumableResources[i]._amount -= NeedValue;
             }
             else 
             {
-                TotalNeedSatisfation += ConsumableResources[i]._amount / Need;
-                ConsumableResources[i]._amount -= ConsumableResources[i]._amount / Need * Need;
+                TotalNeedSatisfation += ConsumableResources[i]._amount / NeedValue;
+                ConsumableResources[i]._amount -= ConsumableResources[i]._amount;
             }
         }
         return (TotalNeedSatisfation / ConsumableResources.Length);
-    }
-    public float Needs(float needs) 
-    {
-        return needs * _Amount;
     }
 }
