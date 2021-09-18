@@ -247,30 +247,28 @@ public class BasicIndustrialSector : MonoBehaviour
     /// </summary>
     public void IndustryResourceProduction(Resource[] ConsumableResources, Resource[] ProducedResources, bool isLoggingEnabled = false)
     {
-        if (Timer.SecondGone())
+        bool isResourcesEnough = true;
+        foreach (Resource consumableResource in ConsumableResources)
         {
-            bool isResourcesEnough = true;
-            foreach (Resource consumableResource in ConsumableResources)
+            if (consumableResource._amount < ConsumableResourcesAmount())
             {
-                if (consumableResource._amount < ConsumableResourcesAmount())
-                {
-                    if(isLoggingEnabled)
-                        Debug.Log($"IndustryResourceProduction : not enough {consumableResource._name} [{consumableResource._amount}/{ConsumableResourcesAmount()}] to get produced resource(s).");
-                    isResourcesEnough = false;
-                }
+                if (isLoggingEnabled)
+                    Debug.Log($"IndustryResourceProduction : not enough {consumableResource._name} [{consumableResource._amount}/{ConsumableResourcesAmount()}] to get produced resource(s).");
+                isResourcesEnough = false;
             }
+        }
 
-            if (!isResourcesEnough) return;
+        if (!isResourcesEnough)
+            return;
 
-            foreach (Resource consumableResource in ConsumableResources)
-            {
-                consumableResource._amount -= ConsumableResourcesAmount();
-            }
+        foreach (Resource consumableResource in ConsumableResources)
+        {
+            consumableResource._amount -= ConsumableResourcesAmount() * Time.deltaTime;
+        }
 
-            foreach (Resource producedResource in ProducedResources)
-            {
-                producedResource._amount += ProducedResourcesAmount();
-            }
+        foreach (Resource producedResource in ProducedResources)
+        {
+            producedResource._amount += ProducedResourcesAmount() * Time.deltaTime;
         }
     }
 }
