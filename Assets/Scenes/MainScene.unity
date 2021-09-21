@@ -825,9 +825,9 @@ MonoBehaviour:
     m_NumAlphaKeys: 2
   colorGradientTexture: {fileID: 0}
   shallowColor: {r: 0, g: 0.7725491, b: 0.62352943, a: 0.5019608}
-  deepColor: {r: 0, g: 0.25960326, b: 0.6509434, a: 1}
+  deepColor: {r: 0, g: 0.25960317, b: 0.6509434, a: 1}
   colorDepth: 0.65
-  horizonColor: {r: 0, g: 0.22697094, b: 0.8, a: 1}
+  horizonColor: {r: 0, g: 0.22697082, b: 0.8, a: 1}
   horizonDistance: 20
   shoreFade: 1
   shoreColor: {r: 1, g: 1, b: 1, a: 0}
@@ -835,7 +835,7 @@ MonoBehaviour:
   shoreBlend: 1
   shoreDepth: 0
   waveColor: {r: 0, g: 0, b: 0, a: 0}
-  underwaterColor: {r: 0.20346653, g: 0.30932382, b: 0.517647, a: 0}
+  underwaterColor: {r: 0.20346645, g: 0.30932373, b: 0.517647, a: 0}
   underwaterColorStrength: 0
   underwaterRefractionStrength: 0.099
   surfaceFoamTexture: {fileID: 2800000, guid: d3b0d77dfe711a04c8ff18ecc260aa66, type: 3}
@@ -965,11 +965,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 770414010}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -792, y: 40, z: 2412}
-  m_LocalScale: {x: 4000, y: 4, z: 4000}
+  m_LocalPosition: {x: 0, y: 10, z: 521}
+  m_LocalScale: {x: 1000, y: 1, z: 1000}
   m_Children: []
-  m_Father: {fileID: 1912048781}
-  m_RootOrder: 6
+  m_Father: {fileID: 1283398048}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &770414015
 BoxCollider:
@@ -1626,6 +1626,7 @@ Transform:
   - {fileID: 1626197150}
   - {fileID: 1912048781}
   - {fileID: 322615420}
+  - {fileID: 770414014}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2266,7 +2267,6 @@ Transform:
   - {fileID: 1131555889}
   - {fileID: 1359214771}
   - {fileID: 1924015832}
-  - {fileID: 770414014}
   m_Father: {fileID: 1283398048}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
