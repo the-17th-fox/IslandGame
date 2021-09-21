@@ -4,10 +4,10 @@ using UnityEngine;
 public class Population : MonoBehaviour
 {
     public float _Amount;// количество населения
-    public float _Education;// образованность
-    public float _EducationSupply;//расчетный уровень образование
+    public float _EducationLevel;// образованность
+    public float _EducationSupply;//расчетный уровень образования
     public float _GenerationSpeed;//естественный прирост (хз вроде не юзается)
-    public float _Medicine;// реальный уровень медицины
+    public float _MedicineLevel;// реальный уровень медицины
     public float _MedicineSupply;//расчетный уровень медецины
     public float _NecessarySatisfactedNeeds;// удавлетворенные базовые нужды
     //public float _LuxurySatisfactedNeeds;
@@ -35,7 +35,7 @@ public class Population : MonoBehaviour
     {
         if (Timer.SecondGone())
         {
-            Debug.Log($"P{_Amount} F: {island.Food._amount} M: {_Medicine} Money:{island.Money._amount},E:{_Education}");
+            Debug.Log($"P{_Amount} F: {island.Food._amount} M: {_MedicineLevel} Money:{island.Money._amount},E:{_EducationLevel}");
             PopulationNeedUpdate(NessosaryResources);
             MedicineUpdate();
             EducationUpdate();
@@ -47,8 +47,8 @@ public class Population : MonoBehaviour
     public void CreatePopulation(uint Amount,float Education, float Medcine) 
     {
         _Amount = Amount;
-        _Education = Education;
-        _Medicine = Medcine;
+        _EducationLevel = Education;
+        _MedicineLevel = Medcine;
         _NecessarySatisfactedNeeds = 1f;  //со старта нужд нет
         //_LuxurySatisfactedNeeds = 1;
         _PopulationIncrease = 0.01f;
@@ -60,7 +60,7 @@ public class Population : MonoBehaviour
     }
     public void PopulationIncrease() 
     {
-        _Amount += (_PopulationIncrease * _Medicine * _Amount * _NecessarySatisfactedNeeds) * Time.deltaTime;   
+        _Amount += (_PopulationIncrease * _MedicineLevel * _Amount * _NecessarySatisfactedNeeds) * Time.deltaTime;   
     }
     
     public float PopulationNeed(Resource[] ConsumableResources) 
@@ -95,14 +95,14 @@ public class Population : MonoBehaviour
             island.Money._amount = 0;
         }
 
-        float DeltaSupply = (PartMedcineSupply * _MedicineSupply)-_Medicine;//узнаем разницу уровня реальной медицины от оплаченной
+        float DeltaSupply = (PartMedcineSupply * _MedicineSupply)-_MedicineLevel;//узнаем разницу уровня реальной медицины от оплаченной
         if (DeltaSupply < 0.03f && DeltaSupply > -0.03f)
         {
-            _Medicine = PartMedcineSupply* _MedicineSupply;
+            _MedicineLevel = PartMedcineSupply* _MedicineSupply;
         }
         else
         {
-            _Medicine += DeltaSupply / 10;// зачисляется 10% до расчитываемого уровня
+            _MedicineLevel += DeltaSupply / 10;// зачисляется 10% до расчитываемого уровня
         }
     }
     public void EducationUpdate()
@@ -118,14 +118,14 @@ public class Population : MonoBehaviour
             island.Money._amount = 0;
         }
 
-        float DeltaSupply = (PartEducationSupply * _EducationSupply) - _Education;//узнаем разницу уровня реального образования от оплаченного
+        float DeltaSupply = (PartEducationSupply * _EducationSupply) - _EducationLevel;//узнаем разницу уровня реального образования от оплаченного
         if (DeltaSupply < 0.03f && DeltaSupply > -0.03f)
         {
-            _Education = PartEducationSupply * _EducationSupply;
+            _EducationLevel = PartEducationSupply * _EducationSupply;
         }
         else
         {
-            _Education += DeltaSupply / 10;// зачисляется 10% до расчитываемого уровня
+            _EducationLevel += DeltaSupply / 10;// зачисляется 10% до расчитываемого уровня
         }
     }
 }
