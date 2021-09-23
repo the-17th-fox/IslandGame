@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BasicIndustrialSector : MonoBehaviour
 {
@@ -14,16 +15,14 @@ public class BasicIndustrialSector : MonoBehaviour
     private uint _totalWorkplacesAmount; // кол-во рабочих мест в в сумме
     private bool _isEnabled; // включена ли пром-ность
 
+    private Text[] _statistics;
     private string[] IndustryLVLNames; // имя сферы с каждым уровнем
 
     private const byte MIN_LVL = 1;
     private byte MAX_LVL;
-    
     private const float MIN_STAFFING = 0.0f;
     private const float MAX_STAFFING = 1.0f;
-
     private const float MIN_EFFECTIVENESS = 0.0f;
-
     private const uint MIN_EMPLOYEES = 0;
     private const float MIN_PRODUCTION_PROPORTION = 0.0f;
     private const uint MIN_WORKPLACES_PER_LVL = 0;
@@ -39,8 +38,7 @@ public class BasicIndustrialSector : MonoBehaviour
     /// <param name="Level"></param>
     /// <param name="EmployeesAmount"></param>
     /// <param name="isEnabled"></param>
-    public void CreateNewIndustry(uint WorkplacesPerLVL, float ProductionProportion, byte MaxLevelConst,
-                                    float Effectiveness = 1, byte Level = 1, uint EmployeesAmount = 0,  bool isEnabled = true)
+    public void CreateNewIndustry(uint WorkplacesPerLVL, float ProductionProportion, byte MaxLevelConst, Text[] Statistics, float Effectiveness = 1, byte Level = 1, uint EmployeesAmount = 0, bool isEnabled = true)
     {
         _isEnabled = isEnabled;
 
@@ -59,6 +57,13 @@ public class BasicIndustrialSector : MonoBehaviour
         }
         _lvl = Level;
 
+        if(Statistics == null)
+        {
+            Debug.LogError($"CreateNewIndustry : Statistics is null.");
+            SetIndustryDisabled();
+        }
+        _statistics = Statistics;
+
         if (ProductionProportion < MIN_PRODUCTION_PROPORTION || ProductionProportion > float.MaxValue)
         {
             Debug.LogError($"CreateNewIndustry : ProductionProportion({ProductionProportion}) < MinProdProp({MIN_PRODUCTION_PROPORTION}) or > floatMaxValue");
@@ -73,7 +78,7 @@ public class BasicIndustrialSector : MonoBehaviour
         }
         _employeesAmount = EmployeesAmount;
 
-        if(WorkplacesPerLVL < MIN_WORKPLACES_PER_LVL || WorkplacesPerLVL > uint.MaxValue)
+        if (WorkplacesPerLVL < MIN_WORKPLACES_PER_LVL || WorkplacesPerLVL > uint.MaxValue)
         {
             Debug.LogError($"CreateNewIndustry : WorkplacesPerLVL({WorkplacesPerLVL}) < MinWorkplacesPerLVL({MIN_WORKPLACES_PER_LVL}) or > uintMaxValue");
             SetIndustryDisabled();
@@ -90,7 +95,7 @@ public class BasicIndustrialSector : MonoBehaviour
         EmployeesRecalculation();
     }
 
-////////////////////////////////////////////////////// АКТИВНОСТЬ СФЕРЫ
+    ////////////////////////////////////////////////////// АКТИВНОСТЬ СФЕРЫ
 
     /// <summary>
     /// Активировать сферу
@@ -114,11 +119,23 @@ public class BasicIndustrialSector : MonoBehaviour
             SetIndustryDisabled();
         }
 
-        if (_isEnabled) return true;
-        else return false;
+        if (_isEnabled)
+            return true;
+        else
+            return false;
     }
 
-////////////////////////////////////////////////////// МЕТОДЫ, КАСАЮЩИЕСЯ РАБОТНИКОВ
+    public void UpdateStatistics()
+    {
+        _statistics[0].text = _name;
+        _statistics[1].text = $"LVL: {_lvl} / {MAX_LVL}";
+        _statistics[2].text = $"EFFECTIVENESS: {_effectiveness}";
+        _statistics[3].text = $"PRODUCTION: {_productionProportion}";
+        _statistics[4].text = $"STAFFING: {_staffing} / {MAX_STAFFING}";
+        _statistics[5].text = $"EMPLOYEES: {_employeesAmount} / {_totalWorkplacesAmount}";
+    }
+
+    ////////////////////////////////////////////////////// МЕТОДЫ, КАСАЮЩИЕСЯ РАБОТНИКОВ
 
     /// <summary>
     /// Пересчитывает кол-во работников, делает проверку на корректность данных
@@ -137,13 +154,13 @@ public class BasicIndustrialSector : MonoBehaviour
         {
             Debug.LogError($"EmployeesRecalculation : Staffing({_staffing}) | MinStaffing({MIN_STAFFING}) | MaxStaffing({MAX_STAFFING})");
             SetIndustryDisabled();
-        }     
+        }
     }
 
     /// <summary>
     /// Перерасчитывает укомплектованность
     /// </summary>
-    private void StaffingUpdate() => _staffing = (float) (_employeesAmount) / (float) (_lvl* _workplacesPerLVL);
+    private void StaffingUpdate() => _staffing = (float)(_employeesAmount) / (float)(_lvl * _workplacesPerLVL);
 
     /// <summary>
     /// Перерасчитывает максимальное кол-во мест
@@ -165,7 +182,7 @@ public class BasicIndustrialSector : MonoBehaviour
         EmployeesRecalculation();
     }
 
-////////////////////////////////////////////////////// УРОВЕНЬ ПРОИЗВОДСТВА И НАЗВАНИЕ СФЕРЫ
+    ////////////////////////////////////////////////////// УРОВЕНЬ ПРОИЗВОДСТВА И НАЗВАНИЕ СФЕРЫ
 
     /// <summary>
     /// Повышает уровень отрасли
@@ -225,10 +242,11 @@ public class BasicIndustrialSector : MonoBehaviour
     private void UpdateNameByLVL(string[] industryLVLNames, bool isLoggingEnabled = false)
     {
         _name = industryLVLNames[_lvl - 1];
-        if (isLoggingEnabled) Debug.Log($"UpdateNameByLVL : Name: '{_name}' | Level: '{_lvl}'");
+        if (isLoggingEnabled)
+            Debug.Log($"UpdateNameByLVL : Name: '{_name}' | Level: '{_lvl}'");
     }
 
-////////////////////////////////////////////////////// ПРОИЗВОДСТВО
+    ////////////////////////////////////////////////////// ПРОИЗВОДСТВО
 
     /// <summary>
     /// Кол-во произведенных ресурсов

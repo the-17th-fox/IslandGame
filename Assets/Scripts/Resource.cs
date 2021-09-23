@@ -31,7 +31,7 @@ public class Resource : MonoBehaviour
 
         for (int i = 0; i < statistics.Length; i++)
         {
-            statistics[i].text = $"{resources[i]._name}: {Math.Round(resources[i]._amount, 1)}";
+            statistics[i].text = $"{Math.Round(resources[i]._amount, 1)}";
         }
     }
     public static void BasicResourcesGeneration(Resource[] resources)

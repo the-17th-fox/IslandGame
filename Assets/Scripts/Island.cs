@@ -56,7 +56,6 @@ public class Island : MonoBehaviour
     {
         Resource.UpdateStatistics(statistics, resources);
         //Resource.BasicResourcesGeneration(resources);
-        //Debug.Log($"Money:{Math.Round(Money._amount, 2)}, Population:{Math.Round(Population._amount, 2)}, Trees:{Math.Round(Trees._amount, 2)}, Iron: {Math.Round(Iron._amount, 2)} Timber: {Math.Round(Timber._amount, 2)}");
     }
 }
 
