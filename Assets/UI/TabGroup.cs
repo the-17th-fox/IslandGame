@@ -5,12 +5,13 @@ using UnityEngine.UI;
 
 public class TabGroup : MonoBehaviour
 {
-    public List<TabButton> tabButtons;
-    public Sprite tabHover;
-    public Sprite tabActive;
-    public Sprite tabIdle;
-    public TabButton selectedTab;
-    public List<GameObject> objectsToSwap;
+    [SerializeField] private List<TabButton> tabButtons;
+    [SerializeField] private Sprite tabHover;
+    [SerializeField] private Sprite tabActive;
+    [SerializeField] private Sprite tabIdle;
+    [SerializeField] private List<GameObject> objectsToSwap;
+
+    private TabButton selectedTab;
 
     public void Subscribe(TabButton button)
     {

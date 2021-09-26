@@ -1,33 +1,42 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
+using UnityEngine.UI;
+
 public class Population : MonoBehaviour
 {
-    public float _Amount;// количество населения
-    public float _EducationLevel;// образованность
-    public float _EducationSupply;//расчетный уровень образования
-    public float _GenerationSpeed;//естественный прирост (хз вроде не юзается)
-    public float _MedicineLevel;// реальный уровень медицины
-    public float _MedicineSupply;//расчетный уровень медецины
-    public float _NecessarySatisfactedNeeds;// удавлетворенные базовые нужды
+    [SerializeField] private float _Amount;// количество населения
+    [SerializeField] private float _EducationLevel;// образованность
+    [SerializeField] private float _EducationSupply;//расчетный уровень образования
+    [SerializeField] private float _GenerationSpeed;//естественный прирост (хз вроде не юзается)
+    [SerializeField] private float _MedicineLevel;// реальный уровень медицины
+    [SerializeField] private float _MedicineSupply;//расчетный уровень медецины
+    [SerializeField] private float _NecessarySatisfactedNeeds;// удавлетворенные базовые нужды
     //public float _LuxurySatisfactedNeeds;
-    public float _PopulationIncrease; // естественный прирост 
+    [SerializeField] private float _BasicPopulationIncreaseRate; // естественный прирост 
     //public float _ImmigrationAttractiveness=1;// перерасчет добавить
     private const float _NecessaryNeeds = 0.001f;// константа нужда базовых поребностей на человека
     private const float _EducationBugetPerPerson = 0.005f; // трата на образование на человека для max образованности
-    private const float _MedcineBugetPerPerson = 0.01f; // трата на медицину на человека для max образованности
+    private const float _MedcineBudgetPerPerson = 0.01f; // трата на медицину на человека для max образованности
 
-    [SerializeField]
-    private Island island;
-    private Resource[] NessosaryResources;
+    [Header("List of text fields:")]
+    [SerializeField] private Text PopulationAmountText;
+    [SerializeField] private Text EducationLevelText;
+    [SerializeField] private Text MedicineLevelText;
+    [SerializeField] private Text PopulationIncreaseRateText;
+    [SerializeField] private Text NecessarySatisfactedNeedsText;
+
+    [SerializeField] private Island island;
+    private Resource[] _ConsumableResources;
     //private Population population;
 
     private void Start()
     {
-        island = gameObject.AddComponent<Island>();
+        //island = gameObject.AddComponent<Island>();
         //population = gameObject.AddComponent<Population>();
-        CreatePopulation(Amount: 1000, Education: 1,Medcine: 0.5f);
-        NessosaryResources = new[] { island.Food };
+        CreatePopulation(Amount: 1000, Education: 0.5f, Medcine: 0.5f);
+        _ConsumableResources = new[] { island.Food };
         _MedicineSupply = 1f;
         _EducationSupply = 1f;
     }
@@ -36,12 +45,12 @@ public class Population : MonoBehaviour
         if (Timer.SecondGone())
         {
             Debug.Log($"P{_Amount} F: {island.Food._amount} M: {_MedicineLevel} Money:{island.Money._amount},E:{_EducationLevel}");
-            PopulationNeedUpdate(NessosaryResources);
+            PopulationNeedUpdate(_ConsumableResources);
             MedicineUpdate();
             EducationUpdate();
             PopulationIncrease();
         }
-        
+        StatisticsUpdate();
     }
 
     public void CreatePopulation(uint Amount,float Education, float Medcine) 
@@ -51,7 +60,7 @@ public class Population : MonoBehaviour
         _MedicineLevel = Medcine;
         _NecessarySatisfactedNeeds = 1f;  //со старта нужд нет
         //_LuxurySatisfactedNeeds = 1;
-        _PopulationIncrease = 0.01f;
+        _BasicPopulationIncreaseRate = 0.01f;
     }
     public void PopulationNeedUpdate(Resource[] NessaryResources/*, Resource[] LuxuryResourse*/) 
     {
@@ -60,7 +69,7 @@ public class Population : MonoBehaviour
     }
     public void PopulationIncrease() 
     {
-        _Amount += (_PopulationIncrease * _MedicineLevel * _Amount * _NecessarySatisfactedNeeds) * Time.deltaTime;   
+        _Amount += (_BasicPopulationIncreaseRate * _MedicineLevel * _Amount * _NecessarySatisfactedNeeds) * Time.deltaTime;   
     }
     
     public float PopulationNeed(Resource[] ConsumableResources) 
@@ -85,13 +94,13 @@ public class Population : MonoBehaviour
     public void MedicineUpdate() 
     {
         float PartMedcineSupply = 1;
-        if (island.Money._amount >= _MedicineSupply * _MedcineBugetPerPerson * _Amount)
+        if (island.Money._amount >= _MedicineSupply * _MedcineBudgetPerPerson * _Amount)
         {
-            island.Money._amount -= _MedicineSupply * _MedcineBugetPerPerson * _Amount;//списание денег за медицину
+            island.Money._amount -= _MedicineSupply * _MedcineBudgetPerPerson * _Amount;//списание денег за медицину
         }
         else 
         {
-            PartMedcineSupply = island.Money._amount / (_MedicineSupply * _MedcineBugetPerPerson * _Amount);
+            PartMedcineSupply = island.Money._amount / (_MedicineSupply * _MedcineBudgetPerPerson * _Amount);
             island.Money._amount = 0;
         }
 
@@ -127,5 +136,14 @@ public class Population : MonoBehaviour
         {
             _EducationLevel += DeltaSupply / 10;// зачисляется 10% до расчитываемого уровня
         }
+    }
+
+    private void StatisticsUpdate()
+    {
+        PopulationAmountText.text = $"{(uint)_Amount}";
+        EducationLevelText.text = $"{Math.Round(_EducationLevel * 100,1)}%";
+        MedicineLevelText.text = $"{Math.Round(_MedicineLevel * 100,1)}%";
+        PopulationIncreaseRateText.text = $"{Math.Round(_BasicPopulationIncreaseRate * _MedicineLevel * _Amount * _NecessarySatisfactedNeeds, 2)}";
+        NecessarySatisfactedNeedsText.text = $"{Math.Round(_NecessarySatisfactedNeeds * 100,1)}%";
     }
 }
