@@ -128,11 +128,11 @@ public class BasicIndustrialSector : MonoBehaviour
     public void UpdateStatistics()
     {
         _statistics[0].text = _name;
-        _statistics[1].text = $"LVL: {_lvl} / {MAX_LVL}";
-        _statistics[2].text = $"EFFECTIVENESS: {_effectiveness}";
-        _statistics[3].text = $"PRODUCTION: {_productionProportion}";
-        _statistics[4].text = $"STAFFING: {_staffing} / {MAX_STAFFING}";
-        _statistics[5].text = $"EMPLOYEES: {_employeesAmount} / {_totalWorkplacesAmount}";
+        _statistics[1].text = $"{_lvl} / {MAX_LVL}"; // Уровень
+        _statistics[2].text = $"{_effectiveness * 100}%"; // Эффективность
+        _statistics[3].text = $"{_productionProportion}"; // Кол-во выходных ресурсов
+        _statistics[4].text = $"{_staffing * 100}% / {MAX_STAFFING * 100}%"; // Укомлектованность
+        _statistics[5].text = $"{_employeesAmount} / {_totalWorkplacesAmount}"; // Кол-во работников
     }
 
     ////////////////////////////////////////////////////// МЕТОДЫ, КАСАЮЩИЕСЯ РАБОТНИКОВ

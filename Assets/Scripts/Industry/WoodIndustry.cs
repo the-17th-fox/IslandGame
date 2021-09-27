@@ -32,7 +32,7 @@ public class WoodIndustry : BasicIndustrialSector
 
         woodIndustry = gameObject.AddComponent<BasicIndustrialSector>();
         woodIndustry.CreateNewIndustry(Statistics: Statistics, MaxLevelConst: 2, ProductionProportion: 1, WorkplacesPerLVL: 10, isEnabled: true, Level: 2);
-        woodIndustry.CreateArrayOfNamesByLVL("Forest Hut", "Sawmill");
+        woodIndustry.CreateArrayOfNamesByLVL("FOREST HUT", "SAWMILL");
         woodIndustry.SetNewEmployeesAmount(10);
     }
 
