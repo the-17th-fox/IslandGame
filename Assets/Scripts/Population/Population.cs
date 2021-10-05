@@ -16,9 +16,11 @@ public class Population : MonoBehaviour
     //public float _LuxurySatisfactedNeeds;
     [SerializeField] private float _BasicPopulationIncreaseRate; // естественный прирост 
     //public float _ImmigrationAttractiveness=1;// перерасчет добавить
+    [SerializeField] private float _WorketablePopulation; // работоспособное население
     private const float _NecessaryNeeds = 0.001f;// константа нужда базовых поребностей на человека
     private const float _EducationBugetPerPerson = 0.005f; // трата на образование на человека для max образованности
     private const float _MedcineBudgetPerPerson = 0.01f; // трата на медицину на человека для max образованности
+    private const float _BasePartWorketablePopulation = 0.7f; //базово работает 
 
     [Header("List of text fields:")]
     [SerializeField] private Text PopulationAmountText;
@@ -44,11 +46,12 @@ public class Population : MonoBehaviour
     {
         if (Timer.SecondGone())
         {
-            Debug.Log($"P{_Amount} F: {island.Food._amount} M: {_MedicineLevel} Money:{island.Money._amount},E:{_EducationLevel}");
+            Debug.Log($"P{_Amount} F: {island.Food._amount} M: {_MedicineLevel} Money:{island.Money._amount},E:{_EducationLevel},WP:{_WorketablePopulation}");
             PopulationNeedUpdate(_ConsumableResources);
             MedicineUpdate();
             EducationUpdate();
             PopulationIncrease();
+            WorketablePopulationUpdate();
         }
         StatisticsUpdate();
     }
@@ -69,7 +72,7 @@ public class Population : MonoBehaviour
     }
     public void PopulationIncrease() 
     {
-        _Amount += (_BasicPopulationIncreaseRate * _MedicineLevel * _Amount * _NecessarySatisfactedNeeds) * Time.deltaTime;   
+        _Amount += (_BasicPopulationIncreaseRate * _Amount * (-0.5f+_MedicineLevel  + _NecessarySatisfactedNeeds)) /** Time.deltaTime*/;   
     }
     
     public float PopulationNeed(Resource[] ConsumableResources) 
@@ -81,12 +84,12 @@ public class Population : MonoBehaviour
             if (ConsumableResources[i]._amount >= NeedValue)
             {
                 TotalNeedSatisfation++;
-                ConsumableResources[i]._amount -= NeedValue * Time.deltaTime;
+                ConsumableResources[i]._amount -= NeedValue /** Time.deltaTime*/;
             }
             else 
             {
                 TotalNeedSatisfation += ConsumableResources[i]._amount / NeedValue;
-                ConsumableResources[i]._amount -= ConsumableResources[i]._amount * Time.deltaTime;
+                ConsumableResources[i]._amount -= ConsumableResources[i]._amount /** Time.deltaTime*/;
             }
         }
         return (TotalNeedSatisfation / ConsumableResources.Length);
@@ -143,7 +146,11 @@ public class Population : MonoBehaviour
         PopulationAmountText.text = $"{(uint)_Amount}";
         EducationLevelText.text = $"{Math.Round(_EducationLevel * 100,1)}%";
         MedicineLevelText.text = $"{Math.Round(_MedicineLevel * 100,1)}%";
-        PopulationIncreaseRateText.text = $"{Math.Round(_BasicPopulationIncreaseRate * _MedicineLevel * _Amount * _NecessarySatisfactedNeeds, 2)}";
+        PopulationIncreaseRateText.text = $"{Math.Round(_BasicPopulationIncreaseRate * _Amount * (-0.5f + _MedicineLevel + _NecessarySatisfactedNeeds), 2)}";
         NecessarySatisfactedNeedsText.text = $"{Math.Round(_NecessarySatisfactedNeeds * 100,1)}%";
+    }
+    public void WorketablePopulationUpdate() // перерасчет доступного населения
+    {
+        _WorketablePopulation = _Amount * (_BasePartWorketablePopulation + (0.2f - (0.4f * _NecessarySatisfactedNeeds)));
     }
 }
