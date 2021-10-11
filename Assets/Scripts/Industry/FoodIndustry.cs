@@ -1,47 +1,48 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI; 
+using UnityEngine.UI;
 
-public class FoodIndustry : BasicIndustrialSector
+public class FoodIndustry : MonoBehaviour
 {
+    private Industry foodIndustry;
+
     [Header("This industry fields:")]
     [SerializeField] private GameObject _firstLVL_prefab;
     [SerializeField] private GameObject _secondLVL_prefab;
-    [SerializeField] private Island island;
 
     [Header("List of statistics fields:")]
-    [SerializeField] private Text NameText;
-    [SerializeField] private Text LVLText;
-    [SerializeField] private Text EffectivenessText;
-    [SerializeField] private Text ProductionProportionText;
-    [SerializeField] private Text StaffingText;
-    [SerializeField] private Text EmployeesText;
+    [SerializeField] public Text NameText;
+    [SerializeField] public Text LVLText;
+    [SerializeField] public Text EffectivenessText;
+    [SerializeField] public Text ProductionProportionText;
+    [SerializeField] public Text EmployeesText;
 
-    private Text[] Statistics;
-    private Resource[] ConsumableResources; // необходимые ресурсы для производства
-    private Resource[] ProducedResources; // выходные ресурсы
+    private Text[] _statistics;
+    private string[] _industryNamesByLVL;
+    private ResourceManager.Resource[] _consumableResources;
+    private ResourceManager.Resource[] _producedResources;
 
-    private BasicIndustrialSector foodIndustry;
+    public ResourceManager _resourceManager;
 
     private void Start()
     {
-        Statistics = new[] { NameText, LVLText, EffectivenessText, ProductionProportionText, StaffingText, EmployeesText };
-        ConsumableResources = new[] { island.Money };
-        ProducedResources = new[] { island.Food };
+        _statistics = new[] { NameText, LVLText, EffectivenessText, ProductionProportionText, EmployeesText };
+        _industryNamesByLVL = new[] { "FARM" };
 
-        foodIndustry = gameObject.AddComponent<BasicIndustrialSector>();
-        foodIndustry.CreateNewIndustry(Statistics: Statistics, MaxLevelConst: 1, ProductionProportion: 2, WorkplacesPerLVL: 10, isEnabled: true);
-        foodIndustry.CreateArrayOfNamesByLVL("Farm");
+        foodIndustry = new Industry(Statistics: _statistics, IndustryLVLNames: _industryNamesByLVL, MAX_LVL: 1, ProductionProportion: 2, WorkplacesPerLVL: 10, IsEnabled: true);
         foodIndustry.SetNewEmployeesAmount(5);
+
+        _consumableResources = new[] { _resourceManager.Money };
+        _producedResources = new[] { _resourceManager.Food };
     }
 
     private void Update()
     {
-        if (foodIndustry.IsEnabled())
+        if (foodIndustry.IsEnabled)
         {
             foodIndustry.UpdateStatistics();
-            foodIndustry.IndustryResourceProduction(ConsumableResources, ProducedResources);
+            foodIndustry.IndustryResourceProduction(_consumableResources, _producedResources);
         }
     }
 }

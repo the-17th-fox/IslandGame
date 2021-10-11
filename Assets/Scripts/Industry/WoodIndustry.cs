@@ -3,45 +3,46 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class WoodIndustry : BasicIndustrialSector
+public class WoodIndustry : MonoBehaviour
 {
+    private Industry woodIndustry;
+
     [Header("This industry fields:")]
     [SerializeField] private GameObject _firstLVL_prefab;
     [SerializeField] private GameObject _secondLVL_prefab;
-    [SerializeField] private Island island;
 
     [Header("List of statistics fields:")]
-    [SerializeField] private Text NameText;
-    [SerializeField] private Text LVLText;
-    [SerializeField] private Text EffectivenessText;
-    [SerializeField] private Text ProductionProportionText;
-    [SerializeField] private Text StaffingText;
-    [SerializeField] private Text EmployeesText;
+    [SerializeField] public Text NameText;
+    [SerializeField] public Text LVLText;
+    [SerializeField] public Text EffectivenessText;
+    [SerializeField] public Text ProductionProportionText;
+    [SerializeField] public Text EmployeesText;
 
-    private Text[] Statistics;
-    private Resource[] ConsumableResources; // необходимые ресурсы для производства
-    private Resource[] ProducedResources; // выходные ресурсы
+    private Text[] _statistics;
+    private string[] _industryNamesByLVL;
+    private ResourceManager.Resource[] _consumableResources; 
+    private ResourceManager.Resource[] _producedResources; 
 
-    private BasicIndustrialSector woodIndustry;
+    public ResourceManager _resourceManager;
 
     private void Start()
     {
-        Statistics = new[] { NameText, LVLText, EffectivenessText, ProductionProportionText, StaffingText, EmployeesText };
-        ConsumableResources = new[] { island.Trees, island.Money };
-        ProducedResources = new[] { island.Timber };
+        _statistics = new[] { NameText, LVLText, EffectivenessText, ProductionProportionText, EmployeesText };
+        _industryNamesByLVL = new[] { "FOREST HUT", "SAWMILL" };
 
-        woodIndustry = gameObject.AddComponent<BasicIndustrialSector>();
-        woodIndustry.CreateNewIndustry(Statistics: Statistics, MaxLevelConst: 2, ProductionProportion: 1, WorkplacesPerLVL: 10, isEnabled: true, Level: 2);
-        woodIndustry.CreateArrayOfNamesByLVL("FOREST HUT", "SAWMILL");
+        woodIndustry = new Industry(Statistics: _statistics, IndustryLVLNames: _industryNamesByLVL, MAX_LVL: 2, ProductionProportion: 1, WorkplacesPerLVL: 10, IsEnabled: true, Level: 2);
         woodIndustry.SetNewEmployeesAmount(10);
+
+        _consumableResources = new[] { _resourceManager.Trees, _resourceManager.Money };
+        _producedResources = new[] { _resourceManager.Timber };
     }
 
     private void Update()
     {
-        if (woodIndustry.IsEnabled())
+        if (woodIndustry.IsEnabled)
         {
             woodIndustry.UpdateStatistics();
-            woodIndustry.IndustryResourceProduction(ConsumableResources, ProducedResources);
+            woodIndustry.IndustryResourceProduction(_consumableResources, _producedResources);
         }
     }
 }

@@ -3,44 +3,45 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class IronIndustry : BasicIndustrialSector
+public class IronIndustry : MonoBehaviour
 {
+    private Industry ironIndustry;
+
     [Header("This industry fields:")]
     [SerializeField] private GameObject _firstLVL_prefab;
-    [SerializeField] private Island island;
 
     [Header("List of statistics fields:")]
-    [SerializeField] private Text NameText;
-    [SerializeField] private Text LVLText;
-    [SerializeField] private Text EffectivenessText;
-    [SerializeField] private Text ProductionProportionText;
-    [SerializeField] private Text StaffingText;
-    [SerializeField] private Text EmployeesText;
+    [SerializeField] public Text NameText;
+    [SerializeField] public Text LVLText;
+    [SerializeField] public Text EffectivenessText;
+    [SerializeField] public Text ProductionProportionText;
+    [SerializeField] public Text EmployeesText;
 
-    private Text[] Statistics;
-    private Resource[] ConsumableResources; // необходимые ресурсы для производства
-    private Resource[] ProducedResources; // выходные ресурсы
+    private Text[] _statistics;
+    private string[] _industryNamesByLVL;
+    private ResourceManager.Resource[] _consumableResources; 
+    private ResourceManager.Resource[] _producedResources; 
 
-    private BasicIndustrialSector ironIndustry;
+    public ResourceManager _resourceManager;
 
     private void Start()
     {
-        Statistics = new[] { NameText, LVLText, EffectivenessText, ProductionProportionText, StaffingText, EmployeesText };
-        ConsumableResources = new[] { island.Coal, island.IronOre, island.Money };
-        ProducedResources = new[] { island.Iron };
+        _statistics = new[] { NameText, LVLText, EffectivenessText, ProductionProportionText, EmployeesText };
+        _industryNamesByLVL = new[] { "FOUNDRY" };
 
-        ironIndustry = gameObject.AddComponent<BasicIndustrialSector>();
-        ironIndustry.CreateNewIndustry(Statistics: Statistics, MaxLevelConst: 1, ProductionProportion: 0.5f, WorkplacesPerLVL: 10, isEnabled: true);
-        ironIndustry.CreateArrayOfNamesByLVL("Foundry");
+        ironIndustry = new Industry(Statistics: _statistics, IndustryLVLNames: _industryNamesByLVL, MAX_LVL: 1, ProductionProportion: 0.5f, WorkplacesPerLVL: 10, IsEnabled: true);
         ironIndustry.SetNewEmployeesAmount(10);
+
+        _consumableResources = new[] { _resourceManager.Coal, _resourceManager.IronOre, _resourceManager.Money };
+        _producedResources = new[] { _resourceManager.Iron };
     }
 
     private void Update()
     {
-        if (ironIndustry.IsEnabled())
+        if (ironIndustry.IsEnabled)
         {
             ironIndustry.UpdateStatistics();
-            ironIndustry.IndustryResourceProduction(ConsumableResources, ProducedResources);
+            ironIndustry.IndustryResourceProduction(_consumableResources, _producedResources);
         }
     }
 }
