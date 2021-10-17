@@ -1,35 +1,53 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEditor;
 
 public class Industry : MonoBehaviour
 {
-    //public ResourceManager _resourceManager;
-    //public ResourceManager.Resource[] _resources = { _resourceManager.Timber, _resourceManager.Food, _resourceManager.Iron, _resourceManager.IronOre, _resourceManager.Coal, _resourceManager.Money, _resourceManager.Trees };
+    [SerializeField] private IndustryInfo _industryInfo;
 
     private IndustryCore _industry;
 
-    [Space][SerializeField] private string[] _industryNamesByLevel;
+    private ResourceManager.Resource[] _producibleResources;
+    private ResourceManager.Resource[] _consumableResources;
 
-    [Space][SerializeField] private GameObject[] _prefabsByLevel;
-
-    [Space][SerializeField] private IndustryInfo _industryInfo;
-
-    [Header("Resources manager:")]
-    [Tooltip("0 - Timber \n1 - Food \n2 - Iron \n3 - IronOre \n4 - Coal \n5 - Money \n6 - Trees")]
-    [SerializeField] private byte[] _producibleResourceIndexes;
-    [Tooltip("0 - Timber \n1 - Food \n2 - Iron \n3 - IronOre \n4 - Coal \n5 - Money \n6 - Trees")]
-    [SerializeField] private byte[] _consumableResourceIndexes;
+    private ResourceManager.Resource[] _resources = new[] { ResourceManager.Timber, ResourceManager.Food, ResourceManager.Iron, ResourceManager.IronOre,
+                                                           ResourceManager.Coal, ResourceManager.Money, ResourceManager.Trees };
 
     void Start()
     {
-        
+        _producibleResources = new ResourceManager.Resource[_industryInfo._producibleResourcesIndexes.Length];
+
+        for (int i = 0; i < _industryInfo._producibleResourcesIndexes.Length; i++)
+        {
+            _producibleResources[i] = _resources[_industryInfo._producibleResourcesIndexes[i]];
+        }
+
+        _consumableResources = new ResourceManager.Resource[_industryInfo._consumableResourcesIndexes.Length];
+
+        for (int i = 0; i < _industryInfo._consumableResourcesIndexes.Length; i++)
+        {
+            _consumableResources[i] = _resources[_industryInfo._consumableResourcesIndexes[i]];
+        }
+
+        _industry = new IndustryCore
+            (
+            ProductionProportion: _industryInfo._productionProportion,
+            MAX_LVL: _industryInfo._MAX_LVL,
+            IndustryInfo: _industryInfo,
+            IndustryLVLNames: _industryInfo._industryNamesByLevel,
+            WorkplacesPerLVL: _industryInfo._workplacesPerLVL,
+            Effectiveness: _industryInfo._effectiveness,
+            Level: _industryInfo._level,
+            IsEnabled: _industryInfo._isEnabled,
+            EmployeesAmount: _industryInfo._employeesAmount
+            );
     }
 
-    // Update is called once per frame
     void Update()
-    {
-        
+    {   
+        _industry.IndustryResourceProduction(ConsumableResources: _consumableResources, ProducedResources: _producibleResources);
+        _industry.UpdateStatistics();
     }
 }
