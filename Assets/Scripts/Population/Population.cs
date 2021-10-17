@@ -153,4 +153,13 @@ public class Population : MonoBehaviour
     {
         _WorketablePopulation = _Amount * (_BasePartWorketablePopulation + (0.2f - (0.4f * _NecessarySatisfactedNeeds)));
     }
+    public void SetMedicineSupply(float value) 
+    {
+        _MedicineSupply = value;
+    }
+    public void SetEducationSupply(float value)
+    {
+        _EducationSupply = value;
+    }
+
 }
