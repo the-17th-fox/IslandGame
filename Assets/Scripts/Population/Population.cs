@@ -29,7 +29,6 @@ public class Population : MonoBehaviour
     [SerializeField] private Text PopulationIncreaseRateText;
     [SerializeField] private Text NecessarySatisfactedNeedsText;
 
-    [SerializeField] private ResourceManager islandResources;
     private ResourceManager.Resource[] _ConsumableResources;
     //private Population population;
 
@@ -38,7 +37,7 @@ public class Population : MonoBehaviour
         //island = gameObject.AddComponent<Island>();
         //population = gameObject.AddComponent<Population>();
         CreatePopulation(Amount: 1000, Education: 0.5f, Medcine: 0.5f);
-        _ConsumableResources = new[] { islandResources.Food };
+        _ConsumableResources = new[] { ResourcesManager.Food };
         _MedicineSupply = 1f;
         _EducationSupply = 1f;
     }
@@ -46,7 +45,7 @@ public class Population : MonoBehaviour
     {
         if (Timer.SecondGone())
         {
-            Debug.Log($"P{_Amount} F: {islandResources.Food.Amount} M: {_MedicineLevel} Money:{islandResources.Money.Amount},E:{_EducationLevel},WP:{_WorketablePopulation}");
+            Debug.Log($"P{_Amount} F: {ResourcesManager.Food.Amount} M: {_MedicineLevel} Money:{ResourcesManager.Money.Amount},E:{_EducationLevel},WP:{_WorketablePopulation}");
             PopulationNeedUpdate(_ConsumableResources);
             MedicineUpdate();
             EducationUpdate();
@@ -97,14 +96,14 @@ public class Population : MonoBehaviour
     public void MedicineUpdate() 
     {
         float PartMedcineSupply = 1;
-        if (islandResources.Money.Amount >= _MedicineSupply * _MedcineBudgetPerPerson * _Amount)
+        if (ResourcesManager.Money.Amount >= _MedicineSupply * _MedcineBudgetPerPerson * _Amount)
         {
-            islandResources.Money.Amount -= _MedicineSupply * _MedcineBudgetPerPerson * _Amount;//списание денег за медицину
+            ResourcesManager.Money.Amount -= _MedicineSupply * _MedcineBudgetPerPerson * _Amount;//списание денег за медицину
         }
         else 
         {
-            PartMedcineSupply = islandResources.Money.Amount / (_MedicineSupply * _MedcineBudgetPerPerson * _Amount);
-            islandResources.Money.Amount = 0;
+            PartMedcineSupply = ResourcesManager.Money.Amount / (_MedicineSupply * _MedcineBudgetPerPerson * _Amount);
+            ResourcesManager.Money.Amount = 0;
         }
 
         float DeltaSupply = (PartMedcineSupply * _MedicineSupply)-_MedicineLevel;//узнаем разницу уровня реальной медицины от оплаченной
@@ -120,14 +119,14 @@ public class Population : MonoBehaviour
     public void EducationUpdate()
     {
         float PartEducationSupply = 1;
-        if (islandResources.Money.Amount >= _EducationSupply * _EducationBugetPerPerson * _Amount)
+        if (ResourcesManager.Money.Amount >= _EducationSupply * _EducationBugetPerPerson * _Amount)
         {
-            islandResources.Money.Amount -= _EducationSupply * _EducationBugetPerPerson * _Amount;//списание денег за образование
+            ResourcesManager.Money.Amount -= _EducationSupply * _EducationBugetPerPerson * _Amount;//списание денег за образование
         }
         else
         {
-            PartEducationSupply = islandResources.Money.Amount / (_EducationSupply * _EducationBugetPerPerson * _Amount);
-            islandResources.Money.Amount = 0;
+            PartEducationSupply = ResourcesManager.Money.Amount / (_EducationSupply * _EducationBugetPerPerson * _Amount);
+            ResourcesManager.Money.Amount = 0;
         }
 
         float DeltaSupply = (PartEducationSupply * _EducationSupply) - _EducationLevel;//узнаем разницу уровня реального образования от оплаченного
