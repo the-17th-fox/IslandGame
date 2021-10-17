@@ -19,12 +19,12 @@ public class IndustryCore
         {
             if (value < MIN_LVL)
             {
-                Debug.LogWarning($"Industry,LVL: Value({value}) is less than MIN({MIN_LVL})");
+                Debug.LogWarning($"{Name},LVL: Value({value}) is less than MIN({MIN_LVL})");
                 _lvl = MIN_LVL;
             }
             else if (value > MAX_LVL)
             {
-                Debug.LogWarning($"Industry,LVL: Value({value}) is greater than MAX({MAX_LVL})");
+                Debug.LogWarning($"{Name},LVL: Value({value}) is greater than MAX({MAX_LVL})");
                 _lvl = MAX_LVL;
             }
             else if (value >= MIN_LVL && value <= MAX_LVL)
@@ -40,19 +40,19 @@ public class IndustryCore
         {
             if (value < MIN_EFFECTIVENESS)
             {
-                Debug.LogWarning($"Industry,Effectiveness: Value({value}) is less than MIN({MIN_EFFECTIVENESS})");
+                Debug.LogWarning($"{Name},Effectiveness: Value({value}) is less than MIN({MIN_EFFECTIVENESS})");
                 _effectiveness = MIN_EFFECTIVENESS;
             }
             else if (value > float.MaxValue)
             {
-                Debug.LogWarning($"Industry,Effectiveness: Value({value}) is greater than MAX({float.MaxValue})");
+                Debug.LogWarning($"{Name},Effectiveness: Value({value}) is greater than MAX({float.MaxValue})");
                 _effectiveness = float.MaxValue;
             }
             else
                 _effectiveness = value;
         }
     }
-    private float _effectiveness;           // Industry effectiveness
+    private float _effectiveness;           // Industry effectiveness (in the future will be changed by technologies)
 
     public float ProductionProportion
     {
@@ -61,12 +61,12 @@ public class IndustryCore
         {
             if (value < MIN_PRODUCTION_PROPORTION)
             {
-                Debug.LogWarning($"Industry,Prod.proportion: Value({value}) is less than MIN({MIN_PRODUCTION_PROPORTION})");
+                Debug.LogWarning($"{Name},Prod.proportion: Value({value}) is less than MIN({MIN_PRODUCTION_PROPORTION})");
                 _productionProportion = MIN_PRODUCTION_PROPORTION;
             }
             else if (value > float.MaxValue)
             {
-                Debug.LogWarning($"Industry,Prod.proportion: Value({value}) is greater than MAX({float.MaxValue})");
+                Debug.LogWarning($"{Name},Prod.proportion: Value({value}) is greater than MAX({float.MaxValue})");
                 _productionProportion = float.MaxValue;
             }
             else
@@ -82,12 +82,12 @@ public class IndustryCore
         {
             if (value < MIN_STAFFING)
             {
-                Debug.LogWarning($"Industry,Staffing: Value({value}) is less than MIN({MIN_STAFFING})");
+                Debug.LogWarning($"{Name},Staffing: Value({value}) is less than MIN({MIN_STAFFING})");
                 _staffing = MIN_STAFFING;
             }
             else if (value > MAX_STAFFING)
             {
-                Debug.LogWarning($"Industry,Staffing: Value({value}) is greater than MAX({MAX_STAFFING})");
+                Debug.LogWarning($"{Name},Staffing: Value({value}) is greater than MAX({MAX_STAFFING})");
                 _staffing = MAX_STAFFING;
             }
             else
@@ -124,12 +124,12 @@ public class IndustryCore
         {
             if (value < MIN_WORKPLACES_PER_LVL)
             {
-                Debug.LogWarning($"Industry,WorkplacesPerLvl: Value({value}) is less than MIN({MIN_WORKPLACES_PER_LVL})");
+                Debug.LogWarning($"{Name},WorkplacesPerLvl: Value({value}) is less than MIN({MIN_WORKPLACES_PER_LVL})");
                 _workplacesPerLVL = MIN_WORKPLACES_PER_LVL;
             }
             else if (value > uint.MaxValue)
             {
-                Debug.LogWarning($"Industry,WorkplacesPerLvl: Value({value}) is greater than MAX({uint.MaxValue})");
+                Debug.LogWarning($"{Name},WorkplacesPerLvl: Value({value}) is greater than MAX({uint.MaxValue})");
                 _workplacesPerLVL = uint.MaxValue;
             }
             else
@@ -145,12 +145,12 @@ public class IndustryCore
         {
             if (value < uint.MinValue)
             {
-                Debug.LogWarning($"Industry,TotalWorkplacesAmount: Value({TotalWorkplacesAmount}) is less than MIN({uint.MinValue})");
+                Debug.LogWarning($"{Name},TotalWorkplacesAmount: Value({TotalWorkplacesAmount}) is less than MIN({uint.MinValue})");
                 _totalWorkplacesAmount = uint.MinValue;
             }
             else if (value > uint.MaxValue)
             {
-                Debug.LogWarning($"Industry,TotalWorkplacesAmount: Value({value}) is greater than MAX({uint.MaxValue})");
+                Debug.LogWarning($"{Name},TotalWorkplacesAmount: Value({value}) is greater than MAX({uint.MaxValue})");
                 _totalWorkplacesAmount = uint.MaxValue;
             }
             else
@@ -188,7 +188,7 @@ public class IndustryCore
         set
         {
             if(value == null)
-                Debug.LogWarning($"IndustryBasse: {Name}, IndustryLVLNames == null");
+                Debug.LogWarning($"IndustryBase: {Name}, IndustryLVLNames == null");
             _industryLVLNames = value;
         }
     }
@@ -207,18 +207,23 @@ public class IndustryCore
     public IndustryCore(float ProductionProportion, byte MAX_LVL, IndustryInfo IndustryInfo, string[] IndustryLVLNames, uint WorkplacesPerLVL = 1, float Effectiveness = 1,
                     byte Level = 1, uint EmployeesAmount = 0, bool IsEnabled = true, bool DebugLog = false)
     {
+        this.IndustryLVLNames = IndustryLVLNames;
+        Name = IndustryLVLNames[0]; // Temp name for debbuging, will be replaced in the end
+
         this.MAX_LVL = MAX_LVL;
         this.Level = Level;
+        this.WorkplacesPerLVL = WorkplacesPerLVL;
+        TotalWorkplacesAmountUpdate();
+        this.EmployeesAmount = EmployeesAmount;
+
         this.Effectiveness = Effectiveness;
         this.ProductionProportion = ProductionProportion;
-        this.EmployeesAmount = EmployeesAmount;
-        this.WorkplacesPerLVL = WorkplacesPerLVL;
         this.IsEnabled = IsEnabled;
-        this.IndustryLVLNames = IndustryLVLNames;
+        
         this.ThisIndustryInfo = IndustryInfo;
 
         UpdateNameByLVL();
-        EmployeesRecalculation();
+        StaffingUpdate();
     }
 
     private Population _population; // Population info
@@ -283,20 +288,20 @@ public class IndustryCore
     /// <summary>
     /// Increases the industry level
     /// </summary>
-    /// <param name="diffiniteNum">The number by which the level increases</param>
-    public void IncreaseLevel(byte diffiniteNum = 1)
+    /// <param name="definiteNum">The number by which the level increases</param>
+    public void IncreaseLevel(byte definiteNum = 1)
     {
-        Level += diffiniteNum;
+        Level += definiteNum;
         UpdateNameByLVL();
     }
 
     /// <summary>
     /// Decreases the industry level
     /// </summary>
-    /// <param name="diffiniteNum">The number by which the level decreases</param>
-    public void DecreaseLevel(byte diffiniteNum = 1)
+    /// <param name="definiteNum">The number by which the level decreases</param>
+    public void DecreaseLevel(byte definiteNum = 1)
     {
-        Level -= diffiniteNum;
+        Level -= definiteNum;
         UpdateNameByLVL();
     }
 
@@ -317,7 +322,7 @@ public class IndustryCore
     /// Returns the coefficient of consumable resources
     /// </summary>
     /// <returns></returns>
-    private float ConsumableResourcesAmount() => Staffing * Staffing;
+    private float ConsumableResourcesAmount() => Effectiveness * Staffing;
 
     /// <summary>
     /// Decreases amount of cunsumableRes., increases amount of producedRes.
