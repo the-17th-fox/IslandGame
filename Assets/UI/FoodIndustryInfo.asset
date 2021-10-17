@@ -12,9 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6acdaa2579368b45913e195218e4515, type: 3}
   m_Name: FoodIndustryInfo
   m_EditorClassIdentifier: 
+  _industryNamesByLevel:
+  - FARM
+  _prefabsByLevel: []
+  _level: 1
+  _productionProportion: 5
+  _workplacesPerLVL: 5
+  _effectiveness: 1
+  _isEnabled: 1
+  _MAX_LVL: 1
+  _employeesAmount: 0
+  _producibleResourcesIndexes: 01
+  _consumableResourcesIndexes: 05
   IndustrySprite: {fileID: 21300000, guid: da711477ec5561848a40e3a3762d3b4c, type: 3}
   NameText: 
-  LevelText: 
-  EffectivenessText: 
-  ProductionText: 
-  EmployeesAmountText: 
+  LevelText: 1 / 0
+  EffectivenessText: 0%
+  ProductionText: 0
+  EmployeesAmountText: 1 / 1

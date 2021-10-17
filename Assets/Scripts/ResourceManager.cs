@@ -86,13 +86,13 @@ public class ResourceManager : MonoBehaviour
     [SerializeField] private Text _moneyAmountText;
     [SerializeField] private Text _treesAmountText;
 
-    [HideInInspector] public Resource Timber = new Resource("Timber");
-    [HideInInspector] public Resource Food = new Resource("Food");
-    [HideInInspector] public Resource Iron = new Resource("Iron");
-    [HideInInspector] public Resource IronOre = new Resource("Iron ore");
-    [HideInInspector] public Resource Coal = new Resource("Coal");
-    [HideInInspector] public Resource Money = new Resource("Money", InitAmount: 1000, BasicGenerationSpeed: 0.5f, isMarketable: false);
-    [HideInInspector] public Resource Trees = new Resource("Trees", InitAmount: 100, BasicGenerationSpeed: 0.5f, MaxAmount: 1000, isMarketable: false);
+    [HideInInspector] public static Resource Timber = new Resource("Timber");
+    [HideInInspector] public static Resource Food = new Resource("Food");
+    [HideInInspector] public static Resource Iron = new Resource("Iron");
+    [HideInInspector] public static Resource IronOre = new Resource("Iron ore");
+    [HideInInspector] public static Resource Coal = new Resource("Coal");
+    [HideInInspector] public static Resource Money = new Resource("Money", InitAmount: 1000, BasicGenerationSpeed: 0.5f, isMarketable: false);
+    [HideInInspector] public static Resource Trees = new Resource("Trees", InitAmount: 100, BasicGenerationSpeed: 0.5f, MaxAmount: 1000, isMarketable: false);
 
     private Resource[] _resourcesArray; // Array of all available resources 
     private Text[] _statisticsArray;    // Array of all text statistics
