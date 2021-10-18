@@ -41,13 +41,16 @@ public class Industry : MonoBehaviour
             Effectiveness: _industryInfo._effectiveness,
             Level: _industryInfo._level,
             IsEnabled: _industryInfo._isEnabled,
-            EmployeesAmount: _industryInfo._employeesAmount
+            DebugLog: _industryInfo._debugLog
             );
     }
 
     void Update()
-    {   
-        _industry.IndustryResourceProduction(ConsumableResources: _consumableResources, ProducedResources: _producibleResources);
+    {
+        if (_industry.DebugLog)
+            _industry.GetDebugLog();
+        _industry.EmployeesRecalculation();
+        _industry.ResourceProduction(ConsumableResources: _consumableResources, ProducedResources: _producibleResources);
         _industry.UpdateStatistics();
     }
 }

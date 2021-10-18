@@ -22,12 +22,12 @@ MonoBehaviour:
   _effectiveness: 1
   _isEnabled: 1
   _MAX_LVL: 2
-  _employeesAmount: 0
+  _debugLog: 0
   _producibleResourcesIndexes: 00
   _consumableResourcesIndexes: 0506
   IndustrySprite: {fileID: 21300000, guid: 89ac277e8419ce6468c5a0eb86ae177d, type: 3}
-  NameText: SAWMILL
-  LevelText: 2 / 2
+  NameText: FOREST HUT
+  LevelText: 1 / 2
   EffectivenessText: 100%
-  ProductionText: 1
-  EmployeesAmountText: 10 / 20
+  ProductionText: 3
+  EmployeesAmountText: 4 / 4

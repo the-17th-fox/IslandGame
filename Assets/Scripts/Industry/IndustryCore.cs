@@ -43,10 +43,10 @@ public class IndustryCore
                 Debug.LogWarning($"{Name},Effectiveness: Value({value}) is less than MIN({MIN_EFFECTIVENESS})");
                 _effectiveness = MIN_EFFECTIVENESS;
             }
-            else if (value > float.MaxValue)
+            else if (value > MAX_EFFECTIVENESS)
             {
-                Debug.LogWarning($"{Name},Effectiveness: Value({value}) is greater than MAX({float.MaxValue})");
-                _effectiveness = float.MaxValue;
+                Debug.LogWarning($"{Name},Effectiveness: Value({value}) is greater than MAX({MAX_EFFECTIVENESS})");
+                _effectiveness = MAX_EFFECTIVENESS;
             }
             else
                 _effectiveness = value;
@@ -194,11 +194,19 @@ public class IndustryCore
     }
     private string[] _industryLVLNames;     // Array of industry names
 
+    public bool DebugLog
+    {
+        get => _debugLog;
+        set => _debugLog = value;
+    }
+    private bool _debugLog;
+
     public const byte MIN_LVL = 1;
     public readonly byte MAX_LVL;
     public const float MIN_STAFFING = 0.0f;
     public const float MAX_STAFFING = 1.0f;
-    public const float MIN_EFFECTIVENESS = 0.0f;
+    public const float MIN_EFFECTIVENESS = 0.1f;
+    public const float MAX_EFFECTIVENESS = float.MaxValue;
     public const uint MIN_EMPLOYEES = 0;
     public const float MIN_PRODUCTION_PROPORTION = 0.0f;
     public const uint MIN_WORKPLACES_PER_LVL = 1;
@@ -224,9 +232,9 @@ public class IndustryCore
 
         UpdateNameByLVL();
         StaffingUpdate();
-    }
 
-    private Population _population; // Population info
+        this.DebugLog = DebugLog;
+    }
 
     ////////////////////////////////////////////////////// INDUSTRY SPHERE AND STATS
 
@@ -252,14 +260,20 @@ public class IndustryCore
         ThisIndustryInfo.EmployeesAmountText = $"{EmployeesAmount} / {TotalWorkplacesAmount}";      // Active employees amount
     }
 
+    public void GetDebugLog()
+    {
+        Debug.Log($"{Name} | LVL({Level}) | EMPL({EmployeesAmount}/{TotalWorkplacesAmount}) | STFF({Staffing}) | EFF({Effectiveness}) | PROD_AM({ProductionProportion})");
+    }
+
     ////////////////////////////////////////////////////// METHODS RELATED TO EMPLOYEES
 
     /// <summary>
     /// Updates employees and staffing data
     /// </summary>
-    private void EmployeesRecalculation()
+    public void EmployeesRecalculation()
     {
         TotalWorkplacesAmountUpdate();
+        EmployeesAmountUpdate();
         StaffingUpdate();
     }
 
@@ -274,6 +288,11 @@ public class IndustryCore
     private void TotalWorkplacesAmountUpdate() => TotalWorkplacesAmount = WorkplacesPerLVL * Level;
 
     /// <summary>
+    /// Recalculates the number of employees
+    /// </summary>
+    private void EmployeesAmountUpdate() => EmployeesAmount = (uint)Population.DeployEmployablePopulation(TotalWorkplacesAmount);
+
+    /// <summary>
     /// Sets a new number of employees
     /// </summary>
     /// <param name="NewEmployeesAmount"></param>
@@ -282,6 +301,11 @@ public class IndustryCore
         EmployeesAmount = NewEmployeesAmount;
         EmployeesRecalculation();
     }
+
+    /// <summary>
+    /// Recalculates the effectiveness
+    /// </summary>
+    private void EffectivenessUpdate() => Effectiveness = 2 * (Population._EducationLevel * Population._MedicineLevel);
 
     ////////////////////////////////////////////////////// INDUSTRY LEVEL AND NAME
 
@@ -327,7 +351,7 @@ public class IndustryCore
     /// <summary>
     /// Decreases amount of cunsumableRes., increases amount of producedRes.
     /// </summary>
-    public void IndustryResourceProduction(ResourceManager.Resource[] ConsumableResources, ResourceManager.Resource[] ProducedResources, bool isLoggingEnabled = false)
+    public void ResourceProduction(ResourceManager.Resource[] ConsumableResources, ResourceManager.Resource[] ProducedResources, bool isLoggingEnabled = false)
     {
         bool isResourcesEnough = true;
         foreach (ResourceManager.Resource consumableResource in ConsumableResources)
@@ -335,7 +359,7 @@ public class IndustryCore
             if (consumableResource.Amount < ConsumableResourcesAmount())
             {
                 if (isLoggingEnabled)
-                    Debug.Log($"IndustryResourceProduction : not enough {consumableResource.Name} [{consumableResource.Amount}/{ConsumableResourcesAmount()}] to get produced resource(s).");
+                    Debug.Log($"ResourceProduction : not enough {consumableResource.Name} [{consumableResource.Amount}/{ConsumableResourcesAmount()}] to get produced resource(s).");
                 isResourcesEnough = false;
             }
         }

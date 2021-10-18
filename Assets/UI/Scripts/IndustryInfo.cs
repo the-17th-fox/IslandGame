@@ -17,7 +17,7 @@ public class IndustryInfo : ScriptableObject
         [SerializeField] public float _effectiveness;
         [SerializeField] public bool _isEnabled;
         [SerializeField] public byte _MAX_LVL;
-        [SerializeField] public uint _employeesAmount;
+        [SerializeField] public bool _debugLog;
 
     [Header("Resources manager:")]
         [Tooltip("0 - Timber \n1 - Food \n2 - Iron \n3 - IronOre \n4 - Coal \n5 - Money \n6 - Trees")]
