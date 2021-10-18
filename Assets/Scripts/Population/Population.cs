@@ -6,7 +6,28 @@ using UnityEngine.UI;
 
 public class Population : MonoBehaviour
 {
-    [SerializeField] private static float _TotalAmount = 1;// количество населения
+    [SerializeField] private static float _TotalAmount;// количество населения
+    public static float TotalAmount 
+    {
+        get => _TotalAmount;
+        set 
+        {
+            if (value < Min_Population)
+            {
+                _TotalAmount = Min_Population;
+            }
+            else 
+            {
+                if (value >= float.MaxValue)
+                {
+                    _TotalAmount = float.MaxValue;
+                }
+                else { _TotalAmount = value; }
+            }
+
+        }
+    }
+
     [SerializeField] public static float _EducationLevel;// образованность
     [SerializeField] private static float _EducationSupply;//расчетный уровень образования
     [SerializeField] private static float _GenerationSpeed;//естественный прирост (хз вроде не юзается)
@@ -21,6 +42,7 @@ public class Population : MonoBehaviour
     private const float _EducationBugetPerPerson = 0.005f; // трата на образование на человека для max образованности
     private const float _MedcineBudgetPerPerson = 0.01f; // трата на медицину на человека для max образованности
     private const float _BasePartEmployablePopulation = 0.7f; //базово работает 
+    private const float Min_Population = 0;
 
     [Header("List of text fields:")]
     [SerializeField] private static Text PopulationAmountText;
