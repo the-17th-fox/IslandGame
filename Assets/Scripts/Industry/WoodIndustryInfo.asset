@@ -12,22 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6acdaa2579368b45913e195218e4515, type: 3}
   m_Name: WoodIndustryInfo
   m_EditorClassIdentifier: 
-  _industryNamesByLevel:
+  IndustryNamesByLevel:
   - FOREST HUT
   - SAWMILL
-  _prefabsByLevel: []
-  _level: 1
-  _productionProportion: 3
-  _workplacesPerLVL: 4
-  _effectiveness: 1
-  _isEnabled: 1
-  _MAX_LVL: 2
-  _debugLog: 0
+  PrefabsByLevel: []
+  Level: 2
+  ProductionProportion: 2
+  WorkplacesPerLVL: 10
+  Effectiveness: 1
+  IsEnabled: 1
+  MAX_LVL: 2
+  DebugLog: 0
+  EmployeesAmount: 18
   _producibleResourcesIndexes: 00
   _consumableResourcesIndexes: 0506
   IndustrySprite: {fileID: 21300000, guid: 89ac277e8419ce6468c5a0eb86ae177d, type: 3}
-  NameText: FOREST HUT
-  LevelText: 1 / 2
+  NameText: SAWMILL
+  LevelText: 2 / 2
   EffectivenessText: 100%
-  ProductionText: 3
-  EmployeesAmountText: 4 / 4
+  ProductionText: 1,8
+  EmployeesAmountText: 18 / 20

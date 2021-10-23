@@ -12,21 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6acdaa2579368b45913e195218e4515, type: 3}
   m_Name: MiningIndustry
   m_EditorClassIdentifier: 
-  _industryNamesByLevel:
+  IndustryNamesByLevel:
   - MINE
-  _prefabsByLevel: []
-  _level: 1
-  _productionProportion: 1
-  _workplacesPerLVL: 5
-  _effectiveness: 1
-  _isEnabled: 1
-  _MAX_LVL: 1
-  _employeesAmount: 5
+  PrefabsByLevel: []
+  Level: 1
+  ProductionProportion: 1
+  WorkplacesPerLVL: 5
+  Effectiveness: 1
+  IsEnabled: 1
+  MAX_LVL: 1
+  DebugLog: 0
+  EmployeesAmount: 0
   _producibleResourcesIndexes: 0304
   _consumableResourcesIndexes: 05
   IndustrySprite: {fileID: 21300000, guid: e7d435178c395b1418b50f6fdb82c0c5, type: 3}
   NameText: MINE
   LevelText: 1 / 1
   EffectivenessText: 100%
-  ProductionText: 0,2
-  EmployeesAmountText: 1 / 5
+  ProductionText: 0
+  EmployeesAmountText: 0 / 5

@@ -12,21 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6acdaa2579368b45913e195218e4515, type: 3}
   m_Name: FoundryIndustryInfo
   m_EditorClassIdentifier: 
-  _industryNamesByLevel:
+  IndustryNamesByLevel:
   - FOUNDRY
-  _prefabsByLevel: []
-  _level: 1
-  _productionProportion: 2
-  _workplacesPerLVL: 3
-  _effectiveness: 1
-  _isEnabled: 1
-  _MAX_LVL: 1
-  _employeesAmount: 0
+  PrefabsByLevel: []
+  Level: 1
+  ProductionProportion: 1
+  WorkplacesPerLVL: 5
+  Effectiveness: 1
+  IsEnabled: 1
+  MAX_LVL: 1
+  DebugLog: 0
+  EmployeesAmount: 0
   _producibleResourcesIndexes: 02
   _consumableResourcesIndexes: 030405
   IndustrySprite: {fileID: 21300000, guid: 3144291e3bbc7cf4ba5caa6b99e425e0, type: 3}
   NameText: FOUNDRY
   LevelText: 1 / 1
   EffectivenessText: 100%
-  ProductionText: 0,5
-  EmployeesAmountText: 10 / 10
+  ProductionText: 0
+  EmployeesAmountText: 0 / 5
