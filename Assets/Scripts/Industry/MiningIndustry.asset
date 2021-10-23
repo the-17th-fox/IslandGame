@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6acdaa2579368b45913e195218e4515, type: 3}
+  m_Name: MiningIndustry
+  m_EditorClassIdentifier: 
+  _industryNamesByLevel:
+  - MINE
+  _prefabsByLevel: []
+  _level: 1
+  _productionProportion: 1
+  _workplacesPerLVL: 5
+  _effectiveness: 1
+  _isEnabled: 1
+  _MAX_LVL: 1
+  _employeesAmount: 5
+  _producibleResourcesIndexes: 0304
+  _consumableResourcesIndexes: 05
+  IndustrySprite: {fileID: 21300000, guid: e7d435178c395b1418b50f6fdb82c0c5, type: 3}
+  NameText: MINE
+  LevelText: 1 / 1
+  EffectivenessText: 100%
+  ProductionText: 0,2
+  EmployeesAmountText: 1 / 5

@@ -96,7 +96,7 @@ public class IndustryCore
     }
     private float _staffing;                // Staffing
 
-    public uint EmployeesAmount
+    public int EmployeesAmount
     {
         get => _employeesAmount;
         set
@@ -115,9 +115,9 @@ public class IndustryCore
                 _employeesAmount = value;
         }
     }
-    private uint _employeesAmount;          // Employees amount
+    private int _employeesAmount;          // Employees amount
 
-    public uint WorkplacesPerLVL
+    public int WorkplacesPerLVL
     {
         get => _workplacesPerLVL;
         set
@@ -127,37 +127,37 @@ public class IndustryCore
                 Debug.LogWarning($"{Name},WorkplacesPerLvl: Value({value}) is less than MIN({MIN_WORKPLACES_PER_LVL})");
                 _workplacesPerLVL = MIN_WORKPLACES_PER_LVL;
             }
-            else if (value > uint.MaxValue)
+            else if (value > int.MaxValue)
             {
-                Debug.LogWarning($"{Name},WorkplacesPerLvl: Value({value}) is greater than MAX({uint.MaxValue})");
-                _workplacesPerLVL = uint.MaxValue;
+                Debug.LogWarning($"{Name},WorkplacesPerLvl: Value({value}) is greater than MAX({int.MaxValue})");
+                _workplacesPerLVL = int.MaxValue;
             }
             else
                 _workplacesPerLVL = value;
         }
     }
-    private uint _workplacesPerLVL;         // Workplaces amount/per LVL
+    private int _workplacesPerLVL;         // Workplaces amount/per LVL
 
-    public uint TotalWorkplacesAmount
+    public int TotalWorkplacesAmount
     {
         get => _totalWorkplacesAmount;
         set
         {
-            if (value < uint.MinValue)
+            if (value < int.MinValue)
             {
-                Debug.LogWarning($"{Name},TotalWorkplacesAmount: Value({TotalWorkplacesAmount}) is less than MIN({uint.MinValue})");
-                _totalWorkplacesAmount = uint.MinValue;
+                Debug.LogWarning($"{Name},TotalWorkplacesAmount: Value({TotalWorkplacesAmount}) is less than MIN({int.MinValue})");
+                _totalWorkplacesAmount = int.MinValue;
             }
-            else if (value > uint.MaxValue)
+            else if (value > int.MaxValue)
             {
-                Debug.LogWarning($"{Name},TotalWorkplacesAmount: Value({value}) is greater than MAX({uint.MaxValue})");
-                _totalWorkplacesAmount = uint.MaxValue;
+                Debug.LogWarning($"{Name},TotalWorkplacesAmount: Value({value}) is greater than MAX({int.MaxValue})");
+                _totalWorkplacesAmount = int.MaxValue;
             }
             else
                 _totalWorkplacesAmount = value;
         }
     }
-    private uint _totalWorkplacesAmount;    // Total workplaces amount
+    private int _totalWorkplacesAmount;    // Total workplaces amount
 
     public bool IsEnabled
     {
@@ -207,13 +207,13 @@ public class IndustryCore
     public const float MAX_STAFFING = 1.0f;
     public const float MIN_EFFECTIVENESS = 0.1f;
     public const float MAX_EFFECTIVENESS = float.MaxValue;
-    public const uint MIN_EMPLOYEES = 0;
+    public const int MIN_EMPLOYEES = 0;
     public const float MIN_PRODUCTION_PROPORTION = 0.0f;
-    public const uint MIN_WORKPLACES_PER_LVL = 1;
-    public const uint MIN_WORKPLACES = 0;
+    public const int MIN_WORKPLACES_PER_LVL = 1;
+    public const int MIN_WORKPLACES = 0;
 
-    public IndustryCore(float ProductionProportion, byte MAX_LVL, IndustryInfo IndustryInfo, string[] IndustryLVLNames, uint WorkplacesPerLVL = 1, float Effectiveness = 1,
-                    byte Level = 1, uint EmployeesAmount = 0, bool IsEnabled = true, bool DebugLog = false)
+    public IndustryCore(float ProductionProportion, byte MAX_LVL, IndustryInfo IndustryInfo, string[] IndustryLVLNames, int WorkplacesPerLVL = 1, float Effectiveness = 1,
+                    byte Level = 1, int EmployeesAmount = 0, bool IsEnabled = true, bool DebugLog = false)
     {
         this.IndustryLVLNames = IndustryLVLNames;
         Name = IndustryLVLNames[0]; // Temp name for debbuging, will be replaced in the end
@@ -229,9 +229,11 @@ public class IndustryCore
         this.IsEnabled = IsEnabled;
         
         this.ThisIndustryInfo = IndustryInfo;
+        _industryInfo.EmployeesAmount = 0;
 
         UpdateNameByLVL();
         StaffingUpdate();
+        //EmployeesRecalculation();
 
         this.DebugLog = DebugLog;
     }
@@ -256,13 +258,13 @@ public class IndustryCore
         ThisIndustryInfo.NameText = Name;                                                           // Name
         ThisIndustryInfo.LevelText = $"{Level} / {MAX_LVL}";                                        // Level
         ThisIndustryInfo.EffectivenessText = $"{Effectiveness * 100}%";                             // Effectiveness
-        ThisIndustryInfo.ProductionText = $"{ProducedResourcesAmount()}";                                // Produced resource amount
+        ThisIndustryInfo.ProductionText = $"{ProducedResourcesAmount()}";                           // Produced resource amount
         ThisIndustryInfo.EmployeesAmountText = $"{EmployeesAmount} / {TotalWorkplacesAmount}";      // Active employees amount
     }
 
     public void GetDebugLog()
     {
-        Debug.Log($"{Name} | LVL({Level}) | EMPL({EmployeesAmount}/{TotalWorkplacesAmount}) | STFF({Staffing}) | EFF({Effectiveness}) | PROD_AM({ProductionProportion})");
+        Debug.Log($"{Name} | LVL({Level}) | EMPL({EmployeesAmount}/{TotalWorkplacesAmount}/DATA {_industryInfo.EmployeesAmount}) | STFF({Staffing}) | EFF({Effectiveness}) | PROD_AM({ProductionProportion})");
     }
 
     ////////////////////////////////////////////////////// METHODS RELATED TO EMPLOYEES
@@ -290,16 +292,12 @@ public class IndustryCore
     /// <summary>
     /// Recalculates the number of employees
     /// </summary>
-    private void EmployeesAmountUpdate() => EmployeesAmount = (uint)Population.DeployEmployablePopulation(TotalWorkplacesAmount);
-
-    /// <summary>
-    /// Sets a new number of employees
-    /// </summary>
-    /// <param name="NewEmployeesAmount"></param>
-    public void SetNewEmployeesAmount(uint NewEmployeesAmount)
+    private void EmployeesAmountUpdate()
     {
-        EmployeesAmount = NewEmployeesAmount;
-        EmployeesRecalculation();
+        // TODO: Сделать чтобы при убыли населения уменьшались и рабочие
+
+        if (EmployeesAmount != _industryInfo.EmployeesAmount)
+            EmployeesAmount = _industryInfo.EmployeesAmount;
     }
 
     /// <summary>

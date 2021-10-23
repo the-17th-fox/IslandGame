@@ -91,8 +91,8 @@ public class ResourceManager : MonoBehaviour
     [HideInInspector] public static Resource Iron = new Resource("Iron");
     [HideInInspector] public static Resource IronOre = new Resource("Iron ore");
     [HideInInspector] public static Resource Coal = new Resource("Coal");
-    [HideInInspector] public static Resource Money = new Resource("Money", InitAmount: 1000, BasicGenerationSpeed: 0.5f, isMarketable: false);
-    [HideInInspector] public static Resource Trees = new Resource("Trees", InitAmount: 100, BasicGenerationSpeed: 0.5f, MaxAmount: 1000, isMarketable: false);
+    [HideInInspector] public static Resource Money = new Resource("Money", InitAmount: 10, BasicGenerationSpeed: 0.05f, isMarketable: false);
+    [HideInInspector] public static Resource Trees = new Resource("Trees", InitAmount: 100, BasicGenerationSpeed: 0.05f, MaxAmount: 1000, isMarketable: false);
 
     private Resource[] _resourcesArray; // Array of all available resources 
     private Text[] _statisticsArray;    // Array of all text statistics

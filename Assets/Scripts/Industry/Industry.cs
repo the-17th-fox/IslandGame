@@ -33,15 +33,15 @@ public class Industry : MonoBehaviour
 
         _industry = new IndustryCore
             (
-            ProductionProportion: _industryInfo._productionProportion,
-            MAX_LVL: _industryInfo._MAX_LVL,
+            ProductionProportion: _industryInfo.ProductionProportion,
+            MAX_LVL: _industryInfo.MAX_LVL,
             IndustryInfo: _industryInfo,
-            IndustryLVLNames: _industryInfo._industryNamesByLevel,
-            WorkplacesPerLVL: _industryInfo._workplacesPerLVL,
-            Effectiveness: _industryInfo._effectiveness,
-            Level: _industryInfo._level,
-            IsEnabled: _industryInfo._isEnabled,
-            DebugLog: _industryInfo._debugLog
+            IndustryLVLNames: _industryInfo.IndustryNamesByLevel,
+            WorkplacesPerLVL: _industryInfo.WorkplacesPerLVL,
+            Effectiveness: _industryInfo.Effectiveness,
+            Level: _industryInfo.Level,
+            IsEnabled: _industryInfo.IsEnabled,
+            DebugLog: _industryInfo.DebugLog
             );
     }
 
@@ -49,7 +49,10 @@ public class Industry : MonoBehaviour
     {
         if (_industry.DebugLog)
             _industry.GetDebugLog();
+
         _industry.EmployeesRecalculation();
+
+
         _industry.ResourceProduction(ConsumableResources: _consumableResources, ProducedResources: _producibleResources);
         _industry.UpdateStatistics();
     }
