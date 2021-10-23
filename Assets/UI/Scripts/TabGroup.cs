@@ -13,6 +13,14 @@ public class TabGroup : MonoBehaviour
 
     private TabButton selectedTab;
 
+    private void Start()
+    {
+        foreach (GameObject page in objectsToSwap)
+        {
+            page.SetActive(false);
+        }
+    }
+
     public void Subscribe(TabButton button)
     {
         if(tabButtons == null)
