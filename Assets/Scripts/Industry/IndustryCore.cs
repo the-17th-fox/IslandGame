@@ -201,6 +201,8 @@ public class IndustryCore
     }
     private bool _debugLog;
 
+    public static int AllIndustriesEmployees = 0;
+
     public const byte MIN_LVL = 1;
     public readonly byte MAX_LVL;
     public const float MIN_STAFFING = 0.0f;
@@ -233,8 +235,6 @@ public class IndustryCore
 
         UpdateNameByLVL();
         StaffingUpdate();
-        //EmployeesRecalculation();
-
         this.DebugLog = DebugLog;
     }
 
@@ -296,7 +296,22 @@ public class IndustryCore
     {
         // TODO: Сделать чтобы при убыли населения уменьшались и рабочие
 
-        if (EmployeesAmount != _industryInfo.EmployeesAmount)
+        Population.EmployablePopulationUpdate();
+        if (Population._EmployedPopulation < AllIndustriesEmployees)
+        {
+            int freeEmployees = (int)(Population._WorkablePopulation - Population._EmployedPopulation);
+            int employeesBoundaries = (int)Population._EmployedPopulation;
+
+            int deltaEmployees = EmployeesAmount - employeesBoundaries;            
+
+            if (AllIndustriesEmployees > employeesBoundaries && freeEmployees == 0)
+            {
+                DecreaseEmployeesAmount(deltaEmployees);
+				EmployeesAmount = _industryInfo.EmployeesAmount;
+            }
+        }
+
+        else if (EmployeesAmount != _industryInfo.EmployeesAmount)
             EmployeesAmount = _industryInfo.EmployeesAmount;
     }
 
@@ -304,6 +319,16 @@ public class IndustryCore
     /// Recalculates the effectiveness
     /// </summary>
     private void EffectivenessUpdate() => Effectiveness = 2 * (Population._EducationLevel * Population._MedicineLevel);
+
+    /// <summary>
+    /// Decreases eployees amount
+    /// </summary>
+    /// <param name="value"></param>
+    private void DecreaseEmployeesAmount(int value)
+    {
+        _industryInfo.EmployeesAmount -= value;
+        AllIndustriesEmployees -= value;
+    }
 
     ////////////////////////////////////////////////////// INDUSTRY LEVEL AND NAME
 

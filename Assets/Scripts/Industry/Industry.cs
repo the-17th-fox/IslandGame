@@ -47,13 +47,12 @@ public class Industry : MonoBehaviour
 
     void Update()
     {
-        if (_industry.DebugLog)
-            _industry.GetDebugLog();
-
         _industry.EmployeesRecalculation();
-
 
         _industry.ResourceProduction(ConsumableResources: _consumableResources, ProducedResources: _producibleResources);
         _industry.UpdateStatistics();
+
+        if (_industry.DebugLog)
+            _industry.GetDebugLog();
     }
 }

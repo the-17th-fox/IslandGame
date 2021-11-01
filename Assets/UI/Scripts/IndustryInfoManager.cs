@@ -64,6 +64,7 @@ public class IndustryInfoManager : MonoBehaviour
                 SetNewEmployeesAmount(_industryData.EmployeesAmount + 1);
             }
 
+            IndustryCore.AllIndustriesEmployees++;
             Population._EmployedPopulation++;
         }
     }
@@ -74,6 +75,7 @@ public class IndustryInfoManager : MonoBehaviour
         {
             SetNewEmployeesAmount(_industryData.EmployeesAmount - 1);
 
+            IndustryCore.AllIndustriesEmployees--;
             Population._EmployedPopulation--;
         }
     }

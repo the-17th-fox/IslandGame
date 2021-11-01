@@ -174,11 +174,13 @@ public class Population : MonoBehaviour
         MedicineLevelText.text = $"{Math.Round(_MedicineLevel * 100, 1)}%";
         PopulationIncreaseRateText.text = $"{Math.Round(_BasicPopulationIncreaseRate * _TotalAmount * (-0.5f + _MedicineLevel + _NecessarySatisfactedNeeds), 2)}";
         NecessarySatisfactedNeedsText.text = $"{Math.Round(_NecessarySatisfactedNeeds * 100, 1)}%";
-        UnemployedAmountText.text = $"{(int)_WorkablePopulation - _EmployedPopulation}";
+        UnemployedAmountText.text = $"{(uint)(_WorkablePopulation - _EmployedPopulation)}";
     }
     public static void EmployablePopulationUpdate() // перерасчет доступного населения
     {
         _WorkablePopulation = _TotalAmount * (_BasePartEmployablePopulation + (0.2f - (0.4f * _NecessarySatisfactedNeeds)));
+        if (_EmployedPopulation > _WorkablePopulation)
+            _EmployedPopulation = _WorkablePopulation;
     }
 
     public static void SetMedicineSupply(float value)
