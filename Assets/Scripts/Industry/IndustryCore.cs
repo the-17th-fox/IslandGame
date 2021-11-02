@@ -297,17 +297,22 @@ public class IndustryCore
         // TODO: Сделать чтобы при убыли населения уменьшались и рабочие
 
         Population.EmployablePopulationUpdate();
-        if (Population._EmployedPopulation < AllIndustriesEmployees)
+        if (Population._EmployedPopulation < AllIndustriesEmployees && EmployeesAmount > 0)
         {
             int freeEmployees = (int)(Population._WorkablePopulation - Population._EmployedPopulation);
             int employeesBoundaries = (int)Population._EmployedPopulation;
 
-            int deltaEmployees = EmployeesAmount - employeesBoundaries;            
+            int deltaEmployees = employeesBoundaries - EmployeesAmount;
+            if (deltaEmployees < 0)
+                Debug.LogError(deltaEmployees);
 
             if (AllIndustriesEmployees > employeesBoundaries && freeEmployees == 0)
             {
-                DecreaseEmployeesAmount(deltaEmployees);
-				EmployeesAmount = _industryInfo.EmployeesAmount;
+                if (deltaEmployees > EmployeesAmount)
+                    DecreaseEmployeesAmount(1);
+                else
+                    DecreaseEmployeesAmount(deltaEmployees);
+                EmployeesAmount = _industryInfo.EmployeesAmount;
             }
         }
 
