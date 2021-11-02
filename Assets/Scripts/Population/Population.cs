@@ -53,6 +53,9 @@ public class Population : MonoBehaviour
     [SerializeField] private Text PopulationIncreaseRateText;
     [SerializeField] private Text NecessarySatisfactedNeedsText;
     [SerializeField] private Text UnemployedAmountText;
+    [SerializeField] private Text EducationSupplyText;
+    [SerializeField] private Text MedicineSupplyText;
+
 
     private static ResourceManager.Resource[] _ConsumableResources;
     //private static Population population;
@@ -63,8 +66,8 @@ public class Population : MonoBehaviour
         //population = gameObject.AddComponent<Population>();
         CreatePopulation(Amount: 20, Education: 0.5f, Medcine: 0.5f);
         _ConsumableResources = new[] { ResourceManager.Food };
-        _MedicineSupply = 1f;
-        _EducationSupply = 1f;
+        _MedicineSupply = 0f;
+        _EducationSupply = 0f;
     }
     private void Update()
     {
@@ -183,13 +186,16 @@ public class Population : MonoBehaviour
             _EmployedPopulation = _WorkablePopulation;
     }
 
-    public static void SetMedicineSupply(float value)
+    public void SetMedicineSupply(float value)
     {
-        _MedicineSupply = value;
+        _MedicineSupply = value / 100; // Слайдер возвращает процент от 0 до 100%, нужно перевести в кол-во *** ресурса
+        //По задумке использовать value процентов от *** ресурса
+        MedicineSupplyText.text = $"{value}";
     }
-    public static void SetEducationSupply(float value)
+    public void SetEducationSupply(float value)
     {
-        _EducationSupply = value;
+        _EducationSupply = value / 100/* * ResourceManager.Money.Amount / 100*/;
+        EducationSupplyText.text = $"{value}";
     }
 
 }
