@@ -275,7 +275,7 @@ public class IndustryCore
     public void EmployeesRecalculation()
     {
         TotalWorkplacesAmountUpdate();
-        EmployeesAmountUpdate();
+        EmployeesAmountUpdate();	
         StaffingUpdate();
     }
 
