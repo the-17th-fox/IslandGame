@@ -124,7 +124,7 @@ public class ResourceManager : MonoBehaviour
 
         for (int i = 0; i < statistics.Length; i++)
         {
-            statistics[i].text = $"{Math.Round(resources[i].Amount, 1)}";
+            statistics[i].text = $"{Math.Round(resources[i].Amount, 0)}";
         }
     }
 

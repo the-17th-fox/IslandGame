@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -40,8 +41,9 @@ public class IndustryCore
         {
             if (value < MIN_EFFECTIVENESS)
             {
-                Debug.LogWarning($"{Name},Effectiveness: Value({value}) is less than MIN({MIN_EFFECTIVENESS})");
+                //Debug.LogWarning($"{Name},Effectiveness: Value({value}) is less than MIN({MIN_EFFECTIVENESS})");
                 _effectiveness = MIN_EFFECTIVENESS;
+                //Debug.LogWarning($"{Name},Effectiveness: Eff({_effectiveness}");
             }
             else if (value > MAX_EFFECTIVENESS)
             {
@@ -257,14 +259,14 @@ public class IndustryCore
     {
         ThisIndustryInfo.NameText = Name;                                                           // Name
         ThisIndustryInfo.LevelText = $"{Level} / {MAX_LVL}";                                        // Level
-        ThisIndustryInfo.EffectivenessText = $"{Effectiveness * 100}%";                             // Effectiveness
-        ThisIndustryInfo.ProductionText = $"{ProducedResourcesAmount()}";                           // Produced resource amount
+        ThisIndustryInfo.EffectivenessText = $"{Math.Round(Effectiveness * 100, 1)}%";                             // Effectiveness
+        ThisIndustryInfo.ProductionText = $"{Math.Round(ProducedResourcesAmount(), 1)}";                           // Produced resource amount
         ThisIndustryInfo.EmployeesAmountText = $"{EmployeesAmount} / {TotalWorkplacesAmount}";      // Active employees amount
     }
 
     public void GetDebugLog()
     {
-        Debug.Log($"{Name} | LVL({Level}) | EMPL({EmployeesAmount}/{TotalWorkplacesAmount}/DATA {_industryInfo.EmployeesAmount}) | STFF({Staffing}) | EFF({Effectiveness}) | PROD_AM({ProductionProportion})");
+        Debug.Log($"{Name} | LVL({Level}) | EMPL({EmployeesAmount}/{TotalWorkplacesAmount}/DATA {_industryInfo.EmployeesAmount}) | STFF({Staffing}) | EFF({Effectiveness}) | PROD_AM({ProducedResourcesAmount()})");
     }
 
     ////////////////////////////////////////////////////// METHODS RELATED TO EMPLOYEES
@@ -277,12 +279,13 @@ public class IndustryCore
         TotalWorkplacesAmountUpdate();
         EmployeesAmountUpdate();	
         StaffingUpdate();
+        EffectivenessUpdate();
     }
 
     /// <summary>
     /// Recalculates staffing
     /// </summary>
-    private void StaffingUpdate() => Staffing = (float)(EmployeesAmount) / (float)(Level * WorkplacesPerLVL);
+    private float StaffingUpdate() => Staffing = (float)(EmployeesAmount) / (float)(Level * WorkplacesPerLVL);
 
     /// <summary>
     /// Recalculates the max number of workplaces
@@ -302,9 +305,9 @@ public class IndustryCore
             int freeEmployees = (int)(Population._WorkablePopulation - Population._EmployedPopulation);
             int employeesBoundaries = (int)Population._EmployedPopulation;
 
-            int deltaEmployees = employeesBoundaries - EmployeesAmount;
+            int deltaEmployees = EmployeesAmount - employeesBoundaries;
             if (deltaEmployees < 0)
-                Debug.LogError(deltaEmployees);
+                Debug.LogWarning(deltaEmployees);
 
             if (AllIndustriesEmployees > employeesBoundaries && freeEmployees == 0)
             {
@@ -323,7 +326,7 @@ public class IndustryCore
     /// <summary>
     /// Recalculates the effectiveness
     /// </summary>
-    private void EffectivenessUpdate() => Effectiveness = 2 * (Population._EducationLevel * Population._MedicineLevel);
+    private float EffectivenessUpdate() => Effectiveness = 2 * (Population._EducationLevel * Population._MedicineLevel);
 
     /// <summary>
     /// Decreases eployees amount

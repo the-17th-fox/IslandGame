@@ -81,7 +81,7 @@ public class Population : MonoBehaviour
         EducationUpdate();
         PopulationIncrease();
         EmployablePopulationUpdate();
-        Debug.Log($"UN: {(int)_WorkablePopulation} | EM: {(int)_EmployedPopulation} | FREE: {(int)(_WorkablePopulation - _EmployedPopulation)}");
+        //Debug.Log($"UN: {(int)_WorkablePopulation} | EM: {(int)_EmployedPopulation} | FREE: {(int)(_WorkablePopulation - _EmployedPopulation)}");
         StatisticsUpdate();
     }
 
@@ -136,8 +136,8 @@ public class Population : MonoBehaviour
             ResourceManager.Money.Amount = 0;
         }
 
-        float DeltaSupply = (PartMedcineSupply * _MedicineSupply) - _MedicineLevel;//узнаем разницу уровня реальной медицины от оплаченной
-        if (DeltaSupply < 0.03f && DeltaSupply > -0.03f)
+        float DeltaSupply = ((PartMedcineSupply * _MedicineSupply) - _MedicineLevel)*0.1f;//узнаем разницу уровня реальной медицины от оплаченной
+        if (DeltaSupply < 0.003f && DeltaSupply > -0.003f)
         {
             _MedicineLevel = PartMedcineSupply * _MedicineSupply;
         }
@@ -159,8 +159,8 @@ public class Population : MonoBehaviour
             ResourceManager.Money.Amount = 0;
         }
 
-        float DeltaSupply = (PartEducationSupply * _EducationSupply) - _EducationLevel;//узнаем разницу уровня реального образования от оплаченного
-        if (DeltaSupply < 0.03f && DeltaSupply > -0.03f)
+        float DeltaSupply = ((PartEducationSupply * _EducationSupply) - _EducationLevel)*0.1f;//узнаем разницу уровня реального образования от оплаченного
+        if (DeltaSupply < 0.003f && DeltaSupply > -0.003f)
         {
             _EducationLevel = PartEducationSupply * _EducationSupply;
         }
@@ -173,9 +173,9 @@ public class Population : MonoBehaviour
     private void StatisticsUpdate()
     {
         PopulationAmountText.text = $"{(uint)_TotalAmount}";
-        EducationLevelText.text = $"{Math.Round(_EducationLevel * 100, 1)}%";
-        MedicineLevelText.text = $"{Math.Round(_MedicineLevel * 100, 1)}%";
-        PopulationIncreaseRateText.text = $"{Math.Round(_BasicPopulationIncreaseRate * _TotalAmount * (-0.5f + _MedicineLevel + _NecessarySatisfactedNeeds), 2)}";
+        EducationLevelText.text = $"{Math.Round(_EducationLevel * 100, 0)}%";
+        MedicineLevelText.text = $"{Math.Round(_MedicineLevel * 100, 0)}%";
+        PopulationIncreaseRateText.text = $"{Math.Round(_BasicPopulationIncreaseRate * _TotalAmount * (-0.5f + _MedicineLevel + _NecessarySatisfactedNeeds),2)}";
         NecessarySatisfactedNeedsText.text = $"{Math.Round(_NecessarySatisfactedNeeds * 100, 1)}%";
         UnemployedAmountText.text = $"{(uint)(_WorkablePopulation - _EmployedPopulation)}";
     }
