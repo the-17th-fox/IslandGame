@@ -18,7 +18,7 @@ public class SliderScript : MonoBehaviour
         _slider.onValueChanged.AddListener((v) =>
         {
             _fillColor.color = Color.Lerp(Color.red, Color.green, _slider.value / 100 + 0.2f);
-            _sliderValueText.text = $"{Math.Round(v,1)}%";
+            _sliderValueText.text = $"{Math.Round(v,0)}%";
         });
     }
 }
